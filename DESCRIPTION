@@ -1,0 +1,13 @@
+Package: oskeyring
+Title: Raw System Credential Store Access from R
+Version: 0.0.0.9000
+Author: Gábor Csárdi
+Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
+Description: Raw System Credential Store Access from R
+License: MIT + file LICENSE
+LazyData: true
+URL: https://github.com/gaborcsardi/oskeyring#readme
+BugReports: https://github.com/gaborcsardi/oskeyring/issues
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat

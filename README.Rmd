@@ -1,0 +1,35 @@
+
+```{r, setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  tidy = FALSE,
+  error = FALSE,
+  fig.width = 8,
+  fig.height = 8)
+```
+
+# oskeyring
+
+> Raw System Credential Store Access from R
+
+[![](http://www.r-pkg.org/badges/version/oskeyring)](http://www.r-pkg.org/pkg/oskeyring)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/oskeyring)](http://www.r-pkg.org/pkg/oskeyring)
+
+
+Raw System Credential Store Access from R
+
+## Installation
+
+```{r eval = FALSE}
+devtools::install_github("gaborcsardi/oskeyring")
+```
+
+## Usage
+
+```{r}
+library(oskeyring)
+```
+
+## License
+
+MIT + file LICENSE © 
