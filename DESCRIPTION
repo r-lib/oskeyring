@@ -3,11 +3,17 @@ Title: Raw System Credential Store Access from R
 Version: 0.0.0.9000
 Author: Gábor Csárdi
 Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
-Description: Raw System Credential Store Access from R
+Description: Aims to support all features of the OS credential store,
+    including non-portable ones. Supports Keychain on macOS,
+    Credential Manager on Windows, and Secret Service on Linux.
+    See the keyring package if you need a portable API.
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/gaborcsardi/oskeyring#readme
 BugReports: https://github.com/gaborcsardi/oskeyring/issues
 RoxygenNote: 7.1.1
-Suggests: 
+Suggests:
+    askpass,
     testthat
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
