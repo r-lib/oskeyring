@@ -63,8 +63,10 @@ macos_item <- function(value, attributes = list(),
 
 #' @export
 format.oskeyring_macos_item <- function(x, ...) {
-  c("<oskeyring_macos_item>")
-  # TODO
+  c(
+    paste0("<oskeyring_macos_item: ", x$class, ">"),
+    paste0(" ", names(x$attributes), ": ", x$attributes)
+  )
 }
 
 #' @export
