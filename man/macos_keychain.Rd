@@ -14,11 +14,12 @@
 \alias{macos_keychain_lock}
 \alias{macos_keychain_unlock}
 \alias{macos_keychain_is_locked}
+\alias{macos_keychain_file}
 \title{Query and manipulate the macOS Keychain}
 \usage{
 macos_item_classes()
 
-macos_item(value, class = "generic_password", attributes = list())
+macos_item(value, attributes = list(), class = "generic_password")
 
 macos_item_add(item, keychain = NULL)
 
@@ -55,16 +56,19 @@ macos_keychain_lock(keychain = NULL)
 macos_keychain_unlock(keychain = NULL, password = NULL)
 
 macos_keychain_is_locked(keychain = NULL)
+
+macos_keychain_file(keychain = NULL)
 }
 \arguments{
-\item{value}{Value of the item, a password, key or certificate. May be
-a string or a raw vector. As string is converted to UTF-8.}
-
-\item{class}{Type of items to search, see \code{\link[=macos_item_classes]{macos_item_classes()}} for
-possible values.}
+\item{value}{Value of the item, a password, key or certificate. It must
+a raw vector or a string. If it is a string, then it is converted to
+UTF-8.}
 
 \item{attributes}{Narrow the search by indicating the attributes that
 the found item or items should have.}
+
+\item{class}{Type of items to search, see \code{\link[=macos_item_classes]{macos_item_classes()}} for
+possible values.}
 
 \item{item}{Keychain item, creted via \code{\link[=macos_item]{macos_item()}} or returned
 by oskeyking itself.}

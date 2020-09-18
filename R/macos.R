@@ -88,7 +88,7 @@ macos_item_add <- function(item, keychain = NULL) {
     inherits(item, "oskeyring_macos_item"),
     is.null(keychain)
   )
-  .Call("oskeyring_macos_add", item, keychain)
+  call_with_cleanup(oskeyring_macos_add, item, keychain)
 }
 
 #' @details
@@ -116,7 +116,7 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
     is_macos_match(match),
     is.null(keychain)
   )
-  .Call("oskeyring_macos_search", class, attributes, match, keychain)
+  call_with_cleanup(oskeyring_macos_search, class, attributes, match, keychain)
 }
 
 #' @param update Named list specifying the new values of attributes.
@@ -133,7 +133,7 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
     is_macos_attributes(update, class),
     is.null(keychain)
   )
-  .Call("oskeyring_macos_update", class, attributes, match, update, keychain)
+  call_with_cleanup(oskeyring_macos_update, class, attributes, match, update, keychain)
 }
 
 #' @export
@@ -147,7 +147,7 @@ macos_item_delete <- function(class = "generic_password", attributes = list(),
     is_macos_match(match),
     is.null(keychain)
   )
-  .Call("oskeyring_macos_delete", class, attributes, match, keychain)
+  call_with_cleanup(oskeyring_macos_delete, class, attributes, match, keychain)
 }
 
 # ------------------------------------------------------------------------
@@ -175,14 +175,14 @@ macos_keychain_create <- function(keychain, password = NULL) {
 
   password <- password %||% ask_pass("Keychain password: ")
   file <- macos_keychain_file(keychain)
-  .Call("oskeyring_macos_keychain_create", file, password)
+  call_with_cleanup(oskeyring_macos_keychain_create, file, password)
 }
 
 #' @export
 #' @rdname macos_keychain
 
 macos_keychain_list <- function() {
-  res <- .Call("oskeyring_macos_keychain_list")
+  res <- call_with_cleanup(oskeyring_macos_keychain_list)
   data.frame(
     keyring = res[[1]],
     num_secrets = res[[2]],
@@ -205,7 +205,7 @@ macos_keychain_delete <- function(keychain) {
     stop("Refusing to delete the system keychain")
   }
   file <- macos_keychain_file(keychain)
-  .Call("oskeyring_macos_keychain_delete", file)
+  call_with_cleanup(oskeyring_macos_keychain_delete, file)
 }
 
 #' @export
@@ -216,7 +216,7 @@ macos_keychain_lock <- function(keychain = NULL) {
     is_string(keychain) || is.null(keychain)
   )
   file <- macos_keychain_file(keychain)
-  .Call("oskeyring_macos_keychain_lock", file)
+  call_with_cleanup(oskeyring_macos_keychain_lock, file)
 }
 
 #' @export
@@ -230,7 +230,7 @@ macos_keychain_unlock <- function(keychain = NULL, password = NULL) {
 
   password <- password %||% ask_pass("Password to unlock keychain: ")
   file <- macos_keychain_file(keychain)
-  .Call("oskeyring_macos_keychain_unlock", file, password)
+  call_with_cleanup(oskeyring_macos_keychain_unlock, file, password)
 }
 
 #' @export
@@ -241,7 +241,7 @@ macos_keychain_is_locked <- function(keychain = NULL) {
     is_string(keychain) || is.null(keychain),
   )
   file <- macos_keychain_file(keychain)
-  .Call("oskeyring_macos_keychain_is_locked", file)
+  call_with_cleanup(oskeyring_macos_keychain_is_locked, file)
 }
 
 #' @export

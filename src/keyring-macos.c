@@ -15,6 +15,7 @@ void keyring_macos_dummy() { }
 #include <string.h>
 
 #include "oskeyring.h"
+#include "cleancall.h"
 
 // ------------------------------------------------------------------------
 // Internal helpers
@@ -55,7 +56,9 @@ SecKeychainRef keyring_macos_open_keychain(const char *pathName) {
 
 CFStringRef cf_chr1(SEXP x) {
   const char *cx = CHAR(STRING_ELT(x, 0));
-  return CFStringCreateWithCString(NULL, cx, kCFStringEncodingUTF8);
+  CFStringRef cs = CFStringCreateWithCString(NULL, cx, kCFStringEncodingUTF8);
+  r_call_on_exit((finalizer_t) CFRelease, (void*) cs);
+  return cs;
 }
 
 CFBooleanRef cf_lgl1(SEXP x) {
@@ -67,11 +70,15 @@ CFBooleanRef cf_lgl1(SEXP x) {
 }
 
 CFNumberRef cf_int1(SEXP x) {
-  return CFNumberCreate(NULL, kCFNumberIntType, INTEGER(x));
+  CFNumberRef cn = CFNumberCreate(NULL, kCFNumberIntType, INTEGER(x));
+  r_call_on_exit((finalizer_t) CFRelease, (void*) cn);
+  return cn;
 }
 
 CFDataRef cf_raw(SEXP x) {
-  return CFDataCreate(NULL, RAW(x), LENGTH(x));
+  CFDataRef cd = CFDataCreate(NULL, RAW(x), LENGTH(x));
+  r_call_on_exit((finalizer_t) CFRelease, (void*) cd);
+  return cd;
 }
 
 void oskeyring__add_class(CFMutableDictionaryRef query, SEXP class) {
@@ -115,11 +122,11 @@ void oskeyring__add_attributes(CFMutableDictionaryRef query, SEXP attr) {
     } else if (!strcmp("protocol", name)) {
       // TODO
     } else if (!strcmp("service", name)) {
-      CFDictionaryAddValue(query, kSecAttrService, cf_chr1(elt));      
+      CFDictionaryAddValue(query, kSecAttrService, cf_chr1(elt));
     } else if (!strcmp("security_domain", name)) {
       CFDictionaryAddValue(query, kSecAttrSecurityDomain, cf_chr1(elt));
     } else if (!strcmp("server", name)) {
-      CFDictionaryAddValue(query, kSecAttrServer, cf_chr1(elt));      
+      CFDictionaryAddValue(query, kSecAttrServer, cf_chr1(elt));
     } else if (!strcmp("synchronizable", name)) {
       CFDictionaryAddValue(query, kSecAttrSynchronizable, cf_lgl1(elt));
     } else {
@@ -139,13 +146,15 @@ SEXP oskeyring_macos_add(SEXP item, SEXP keychain) {
     &kCFTypeDictionaryKeyCallBacks,
     &kCFTypeDictionaryValueCallBacks);
 
+  r_call_on_exit((finalizer_t) CFRelease, (void*) query);
+
   oskeyring__add_class(query, list_elt(item, "class"));
   CFDictionaryAddValue(query, kSecValueData, cf_raw(list_elt(item, "value")));
   oskeyring__add_attributes(query, list_elt(item, "attributes"));
 
   OSStatus status = SecItemAdd(query, NULL);
   keyring_macos_handle_status("cannot add keychain item", status);
-  
+
   return R_NilValue;
 }
 
@@ -602,13 +611,16 @@ static const R_CallMethodDef callMethods[]  = {
   REGISTER(oskeyring_macos_keychain_unlock,    2),
   REGISTER(oskeyring_macos_keychain_is_locked, 1),
 
+  CLEANCALL_METHOD_RECORD,
+
   { NULL, NULL, 0 }
 };
 
-void R_init_keyring(DllInfo *dll) {
+void R_init_oskeyring(DllInfo *dll) {
   R_registerRoutines(dll, NULL, callMethods, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
   R_forceSymbols(dll, TRUE);
+  cleancall_init();
 }
 
 #endif // __APPLE__
