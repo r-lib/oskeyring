@@ -61,11 +61,20 @@ macos_item <- function(value, attributes = list(),
   )
 }
 
+format_attr <- function(x) {
+  type <- vapply(x, typeof, character(1))
+  x <- format(x)
+  x <- ifelse(type != "raw", x, paste0("[raw] ", x))
+  nc <- nchar(x)
+  ifelse(type != "raw" | nc <= 60, x, paste(substr(x, 1, 56), "..."))
+}
+
 #' @export
 format.oskeyring_macos_item <- function(x, ...) {
+  attr <- x$attributes[sort(names(x$attributes))]
   c(
     paste0("<oskeyring_macos_item: ", x$class, ">"),
-    paste0(" ", names(x$attributes), ": ", x$attributes)
+    paste0(" ", names(attr), ": ", format_attr(attr))
   )
 }
 
