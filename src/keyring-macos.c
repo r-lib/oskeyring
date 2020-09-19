@@ -214,6 +214,39 @@ void oskeyring__add_attributes(CFMutableDictionaryRef query, SEXP attr) {
   }
 }
 
+void oskeyring__add_match_params(CFMutableDictionaryRef query, SEXP attr) {
+  size_t i, n = LENGTH(attr);
+  SEXP nms = getAttrib(attr, R_NamesSymbol);
+
+  // Default is all matching records
+  CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitAll);
+
+  for (i = 0; i < n; i++) {
+    const char *name = CHAR(STRING_ELT(nms, i));
+    SEXP elt = VECTOR_ELT(attr, i);
+    if (!strcmp(name, "case_insensitive")) {
+      CFDictionaryAddValue(query, kSecMatchCaseInsensitive, cf_value(LGLSXP, elt));
+    } else if (!strcmp(name, "diacritic_insensitive")) {
+      CFDictionaryAddValue(query, kSecMatchDiacriticInsensitive, cf_value(LGLSXP, elt));
+    } else if (!strcmp(name, "width_insensitive")) {
+      CFDictionaryAddValue(query, kSecMatchWidthInsensitive, cf_value(LGLSXP, elt));
+    } else if (!strcmp(name, "limit")) {
+      double val = -1;
+      if (Rf_isInteger(elt)) val = INTEGER(elt)[0];
+      if (Rf_isReal(elt)) val = REAL(elt)[0];
+      if (val <= 0) error("Invalid `limit` for Keychain search");
+      if (!R_FINITE(val)) {
+        CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitAll);
+      } else {
+        CFDictionarySetValue(query, kSecMatchLimit,
+                             cf_int1(Rf_coerceVector(elt, INTSXP)));
+      }
+    } else {
+      warning("Unknown keychain match parameter: `%s`", name);
+    }
+  }
+}
+
 // ------------------------------------------------------------------------
 // Internal helpers
 // ------------------------------------------------------------------------
@@ -358,15 +391,14 @@ SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
 
   r_call_on_exit((finalizer_t) CFRelease, (void*) query);
 
+  // TODO: keychain
   oskeyring__add_class(query, class);
   oskeyring__add_attributes(query, attributes);
-  CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitAll);
+  oskeyring__add_match_params(query, match);
+
   CFDictionarySetValue(query, kSecReturnData, kCFBooleanFalse);
   CFDictionarySetValue(query, kSecReturnRef, kCFBooleanTrue);
   CFDictionarySetValue(query, kSecReturnAttributes, kCFBooleanTrue);
-
-  // TODO: match
-  // TODO: keychain
 
   CFArrayRef resArray = NULL;
   OSStatus status = SecItemCopyMatching(query, (CFTypeRef*) &resArray);
@@ -386,7 +418,11 @@ SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
 
   r_call_on_exit((finalizer_t) CFRelease, (void*) resArray);
 
-  return oskeyring_as_item_list(resArray);
+  if (CFGetTypeID(resArray) == CFArrayGetTypeID()) {
+    return oskeyring_as_item_list(resArray);
+  } else {
+    return oskeyring_as_item((SecKeychainItemRef) resArray);
+  }
 }
 
 SEXP oskeyring_macos_update(SEXP class, SEXP attributes,

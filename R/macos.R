@@ -266,6 +266,8 @@ macos_keychain_file <- function(keychain = NULL) {
 # Internals
 # ------------------------------------------------------------------------
 
+# TODO: create these from the C data to avoid duplication
+
 macos_attr <- function() {
   list(
     generic_password = list(
@@ -384,9 +386,44 @@ is_macos_attributes <- function(attr, class) {
   TRUE
 }
 
+macos_match_options <- function() {
+  list(
+    ## TODO: authentication_context,
+    ## TODO: use_authentication_uI,
+    ## TODO: use_operation_prompt
+    ## policy,
+    ## issuers,
+    ## email_address_if_present,
+    ## subject_contains,
+    ## subject_starts_with,
+    ## subject_ends_with,
+    ## subject_whole_string,
+    case_insensitive = paste0(
+      "[logical(1)] If this value is `TRUE`, or if this option is not ",
+      "provided, then case-sensitive string matching is performed"),
+    diacritic_insensitive = paste0(
+      "[logical(1)] If this value is `FALSE`, or if this option is not ",
+      "provided, then diacritic-sensitive string matching is performed."),
+    width_insensitive = paste0(
+      "[logical(1)] If this value is `FALSE`, or if this option is not ",
+      "provided, then width-sensitive string matching is performed."),
+    ## trusted_only,
+    ## valid_on_date,
+    limit = paste0(
+      "[logical(1)] This value specifies the maximum number of results ",
+      "to return or otherwise act upon. Use `Inf` to specify all ",
+      "matching items")
+  )
+}
+
 is_macos_match <- function(x) {
   if (!is_named_list(x)) return(FALSE)
-  # TODO
+  mtch <- macos_match_options()
+  bad <- setdiff(names(x), names(mtch))
+  if (length(bad)) {
+    stop("Unknown attributes for `", class, "`:",
+         paste0("`", bad, "`", collapse = ", "))
+  }
   TRUE
 }
 
