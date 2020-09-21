@@ -63,7 +63,7 @@ macos_item <- function(value, attributes = list(),
 
 format_attr <- function(x) {
   type <- vapply(x, typeof, character(1))
-  x <- format(x)
+  x <- lapply(x, format)
   x <- ifelse(type != "raw", x, paste0("[raw] ", x))
   nc <- nchar(x)
   ifelse(type != "raw" | nc <= 60, x, paste(substr(x, 1, 56), "..."))
@@ -97,7 +97,7 @@ macos_item_add <- function(item, keychain = NULL) {
     inherits(item, "oskeyring_macos_item"),
     is.null(keychain)
   )
-  call_with_cleanup(oskeyring_macos_add, item, keychain)
+  invisible(call_with_cleanup(oskeyring_macos_add, item, keychain))
 }
 
 #' @details
@@ -275,8 +275,10 @@ macos_attr <- function() {
 #      access_control,
 #      access_group,
 #      accessible,
-#      creation_date,
-#      modification_date,
+      creation_date = paste0(
+        "[.POSIXct(1)][read-only] The date the item was created."),
+      modification_date = paste0(
+        "[.POSIXct(1)][read-only] The last time the item was updated."),
       description = paste0(
         "[character(1)] User-visible string describing this kind of",
         "item (for example, 'Disk image password')."),
@@ -293,8 +295,9 @@ macos_attr <- function() {
         "application doesn't want a password for some particular service ",
         "to be stored in the keychain, but prefers that it always be ",
         "entered by the user."),
-      account = "[character(1)] Account name.",
-      service = "[character(1)] The service associated with this item.",
+      account = "[character(1)][key] Account name.",
+      service = paste0(
+        "[character(1)][key] The service associated with this item."),
       generic = "[character(1)] User-defined attribute.",
       synchronizable = paste0(
         "[logical(1)] Indicates whether the item in question is ",
@@ -304,8 +307,10 @@ macos_attr <- function() {
 #      access,
 #      access_group,
 #      accessible,
-#      creation_date,
-#      modification_date,
+      creation_date = paste0(
+        "[.POSIXct(1)][read-only] The date the item was created."),
+      modification_date = paste0(
+        "[.POSIXct(1)][read-only] The last time the item was updated."),
       description = paste0(
         "[character(1)] User-visible string describing this kind of",
         "item (for example, 'Disk image password')."),
@@ -322,57 +327,22 @@ macos_attr <- function() {
         "application doesn't want a password for some particular service ",
         "to be stored in the keychain, but prefers that it always be ",
         "entered by the user."),
-      account = "[character(1)] Account name.",
+      account = "[character(1)][key] Account name.",
       synchronizable = paste0(
         "[logical(1)] Indicates whether the item in question is ",
         "synchronized to other devices through iCloud."),
-      security_domain = "[character(1)] The item's security domain.",
+      security_domain = "[character(1)][key] The item's security domain.",
       server = paste0(
-        "[character(1)] Contains the server's domain name or IP address."),
-      protocol = "[character(1)] The protocol for this item.",
-      authentication_type = "character[1] Authentication type.",
-      port = "[integer(1)] Internet port number.",
+        "[character(1)][key] Contains the server's domain name or IP ",
+        "address."),
+      protocol = "[character(1)][key] The protocol for this item.",
+      authentication_type = "character[1][key] Authentication type.",
+      port = "[integer(1)][key] Internet port number.",
       path = paste0(
-        "[character(1)] A path, typically the path component of the URL")
+        "[character(1)][key] A path, typically the path component of ",
+        "the URL")
     )
   )
-}
-
-macos_to_camel <- function(names) {
-  map <- c(
-    generic_password = "GenericPassword",
-    internet_password = "InternetPassword",
-
-#    access = "Access",
-#    access_control = "AccessControl",
-#    access_group = "AccessGroup",
-#    accessible = "Accessible",
-    account = "Account",
-    authentication_type = "AuthenticationType",
-    comment = "Comment",
-#    creation_date = "CreationDate",
-#    creator = "Creator",
-    description = "Description",
-    generic = "Generic",
-    is_invisible = "IsInvisible",
-    is_negative = "IsNegative",
-    label = "Label",
-#    modification_date = "ModificationDate",
-    path = "Path",
-    port = "Port",
-    protocol = "Protocol",
-    service = "Service",
-    security_domain = "SecurityDomain",
-    server = "Server",
-    synchronizable = "Synchronizable",
-#    type = "Type"
-  )
-
-  map[names]
-}
-
-macos_to_lower <- function(names) {
-  tolower(names)
 }
 
 is_macos_attributes <- function(attr, class) {

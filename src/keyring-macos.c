@@ -21,6 +21,9 @@ void oskeyring_macos_dummy() { }
 // Conversion from SEXP to CF
 // ------------------------------------------------------------------------
 
+#define XDATESXP 1001
+#define XPROTSXP 1002
+
 CFStringRef cf_chr1(SEXP x) {
   const char *cx = CHAR(STRING_ELT(x, 0));
   CFStringRef cs = CFStringCreateWithCString(NULL, cx, kCFStringEncodingUTF8);
@@ -48,6 +51,96 @@ CFDataRef cf_raw(SEXP x) {
   return cd;
 }
 
+// This is the number of seconds between the CFDate reference
+// (2001-01-01) and the Unix reference (1970-01-01).
+#define CF_DATE_OFFSET 978307200
+
+CFDateRef cf_date(SEXP x) {
+  double t = REAL(x)[0];
+  CFAbsoluteTime cft = t - CF_DATE_OFFSET;
+  CFDateRef cd = CFDateCreate(NULL, cft);
+  r_call_on_exit((finalizer_t) CFRelease, (void*) cd);
+  return cd;
+}
+
+struct macos_attr_protocol_t {
+  CFStringRef cf_label;
+  const char *r_name;
+};
+
+#define MACOS_ATTR_PROTOCOL_NUM 32
+static struct macos_attr_protocol_t protocols[MACOS_ATTR_PROTOCOL_NUM];
+
+#define X(b,c) do {                                                     \
+    if (idx >= MACOS_ATTR_PROTOCOL_NUM) error("too many protocols");    \
+    protocols[idx].cf_label = (void*) kSecAttrProtocol ## b;            \
+    protocols[idx++].r_name = c;                                        \
+  } while (0)                                                           \
+
+static void macos_init_protocol_list() {
+  if (protocols[0].cf_label != NULL) return;
+  int idx = 0;
+  X(FTP, "ftp");
+  X(FTPAccount, "ftp_account");
+  X(HTTP, "http");
+  X(IRC, "irc");
+  X(NNTP, "nntp");
+  X(POP3, "pop3");
+  X(SMTP, "smtp");
+  X(SOCKS, "socks");
+  X(IMAP, "imap");
+  X(LDAP, "ldap");
+  X(AppleTalk, "apple_talk");
+  X(AFP, "afp");
+  X(Telnet, "telnet");
+  X(SSH, "ssh");
+  X(FTPS, "ftps");
+  X(HTTPS, "https");
+  X(HTTPProxy, "http_proxy");
+  X(HTTPSProxy, "https_proxy");
+  X(FTPProxy, "ftp_proxy");
+  X(SMB, "smb");
+  X(RTSP, "rtsp");
+  X(RTSPProxy, "rtsp_proxy");
+  X(DAAP, "daap");
+  X(EPPC, "eppc");
+  X(IPP, "ipp");
+  X(NNTPS, "nntps");
+  X(LDAPS, "ldaps");
+  X(TelnetS, "telnets");
+  X(IMAPS, "imaps");
+  X(IRCS, "ircs");
+  X(POP3S, "pop3s");
+  protocols[idx++].cf_label = NULL;
+}
+
+#undef X
+
+struct macos_attr_protocol_t *oskeyring_find_protocol(const char *name) {
+  int i, num = sizeof(protocols) / sizeof(struct macos_attr_protocol_t);
+  for (i = 0; i < num; i++) {
+    if (protocols[i].cf_label == NULL) break;
+    if (!strcasecmp(name, protocols[i].r_name)) return &protocols[i];
+  }
+  error("Unknown Keychain API Protocol attribute: `%s`", name);
+}
+
+struct macos_attr_protocol_t
+*oskeyring_find_protocol_by_cf_label(CFStringRef label) {
+  int i, num = sizeof(protocols) / sizeof(struct macos_attr_protocol_t);
+  for (i = 0; i < num; i++) {
+    if (protocols[i].cf_label == NULL) break;
+    if (protocols[i].cf_label == label) return &protocols[i];
+  }
+  return NULL;
+}
+
+CFStringRef cf_prot(SEXP x) {
+  const char *chr = CHAR(STRING_ELT(x, 0));
+  struct macos_attr_protocol_t *rec = oskeyring_find_protocol(chr);
+  return rec->cf_label;
+}
+
 const void *cf_value(SEXPTYPE type, SEXP x) {
   switch(type) {
   case CHARSXP:
@@ -61,8 +154,16 @@ const void *cf_value(SEXPTYPE type, SEXP x) {
     break;
   case RAWSXP:
     return cf_raw(x);
+    break;
+  case XDATESXP:
+    return cf_date(x);
+    break;
+  case XPROTSXP:
+    return cf_prot(x);
+    break;
   default:
     error("Unsupported attribute type in oskeyring");
+    break;
   }
 }
 
@@ -110,6 +211,28 @@ SEXP as_raw(CFDataRef cd) {
   return ret;
 }
 
+SEXP as_date(CFDateRef cd) {
+  CFAbsoluteTime cft = CFDateGetAbsoluteTime(cd);
+  double t = cft + CF_DATE_OFFSET;
+  SEXP d = PROTECT(ScalarReal(t));
+  SEXP class = PROTECT(allocVector(STRSXP, 2));
+  SET_STRING_ELT(class, 0, Rf_mkCharCE("POSIXct", CE_UTF8));
+  SET_STRING_ELT(class, 1, Rf_mkCharCE("POSIXt", CE_UTF8));
+  setAttrib(d, R_ClassSymbol, class);
+  UNPROTECT(2);
+  return d;
+}
+
+SEXP as_prot(CFStringRef cs) {
+  struct macos_attr_protocol_t *rec =
+    oskeyring_find_protocol_by_cf_label(cs);
+  if (rec) {
+    return Rf_ScalarString(Rf_mkCharCE(rec->r_name, CE_UTF8));
+  } else {
+    return Rf_ScalarString(R_NaString);
+  }
+}
+
 SEXP as_sexp(SEXPTYPE type, const void *x) {
   switch (type) {
   case CHARSXP:
@@ -124,8 +247,15 @@ SEXP as_sexp(SEXPTYPE type, const void *x) {
   case RAWSXP:
     return as_raw(x);
     break;
+  case XDATESXP:
+    return as_date(x);
+    break;
+  case XPROTSXP:
+    return as_prot(x);
+    break;
   default:
     error("Internal oskeyring error, unsupported SEXPTYPE for attribute");
+    break;
   }
 }
 
@@ -143,13 +273,15 @@ struct macos_attr {
   SEXPTYPE r_type;
 };
 
-static struct macos_attr macos_attr_list[16];
+#define OSKEYRING_MACOS_ATTR_NUM 20
+static struct macos_attr macos_attr_list[OSKEYRING_MACOS_ATTR_NUM];
 
-#define X(b,c,d,e) do {                                        \
-    macos_attr_list[idx].cf_label = (void*) kSecAttr ## b;     \
-    macos_attr_list[idx].r_name = c;                           \
-    macos_attr_list[idx].cf_type = d;                          \
-    macos_attr_list[idx++].r_type = e;                         \
+#define X(b,c,d,e) do {                                                 \
+    if (idx >= OSKEYRING_MACOS_ATTR_NUM) error("too many attr types");  \
+    macos_attr_list[idx].cf_label = (void*) kSecAttr ## b;              \
+    macos_attr_list[idx].r_name = c;                                    \
+    macos_attr_list[idx].cf_type = d;                                   \
+    macos_attr_list[idx++].r_type = e;                                  \
   } while (0)
 
 static void macos_init_attr_list() {
@@ -159,14 +291,16 @@ static void macos_init_attr_list() {
   X(Account,            "account",             CFStringGetTypeID(),  CHARSXP);
   X(AuthenticationType, "authentication_type", CFNumberGetTypeID(),  INTSXP);
   X(Comment,            "comment",             CFStringGetTypeID(),  CHARSXP);
+  X(CreationDate,       "creation_date",       CFDateGetTypeID(),    XDATESXP);
   X(Description,        "description",         CFStringGetTypeID(),  CHARSXP);
   X(Generic,            "generic",             CFDataGetTypeID(),    RAWSXP);
   X(IsInvisible,        "is_invisible",        CFBooleanGetTypeID(), LGLSXP);
   X(IsNegative,         "is_negative",         CFBooleanGetTypeID(), LGLSXP);
   X(Label,              "label",               CFStringGetTypeID(),  CHARSXP);
+  X(ModificationDate,   "modification_date",   CFDateGetTypeID(),    XDATESXP);
   X(Path,               "path",                CFStringGetTypeID(),  CHARSXP);
   X(Port,               "port",                CFNumberGetTypeID(),  INTSXP);
-  // Protocol
+  X(Protocol,           "protocol",            CFStringGetTypeID(),  XPROTSXP);
   X(Service,            "service",             CFStringGetTypeID(),  CHARSXP);
   X(SecurityDomain,     "security_domain",     CFStringGetTypeID(),  CHARSXP);
   X(Server,             "server",              CFStringGetTypeID(),  CHARSXP);
@@ -179,6 +313,7 @@ static void macos_init_attr_list() {
 struct macos_attr *oskeyring_find_attr(const char *name) {
   int i, num = sizeof(macos_attr_list) / sizeof(struct macos_attr);
   for (i = 0; i < num; i++) {
+    if (macos_attr_list[i].cf_label == NULL) break;
     if (!strcmp(name, macos_attr_list[i].r_name)) return &macos_attr_list[i];
   }
   error("Unknown Keychain item attribute: `%s`", name);
@@ -187,6 +322,7 @@ struct macos_attr *oskeyring_find_attr(const char *name) {
 struct macos_attr *oskeyring_find_attr_by_cf_label(CFStringRef label) {
   int i, num = sizeof(macos_attr_list) / sizeof(struct macos_attr);
   for (i = 0; i < num; i++) {
+    if (macos_attr_list[i].cf_label == NULL) break;
     if (macos_attr_list[i].cf_label == label) return &macos_attr_list[i];
   }
   return NULL;
@@ -617,6 +753,7 @@ void R_init_oskeyring(DllInfo *dll) {
   R_forceSymbols(dll, TRUE);
   cleancall_init();
   macos_init_attr_list();
+  macos_init_protocol_list();
 }
 
 #endif // __APPLE__
