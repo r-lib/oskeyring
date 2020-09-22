@@ -198,16 +198,28 @@ macos_keychain_create <- function(keychain, password = NULL) {
   call_with_cleanup(oskeyring_macos_keychain_create, file, password)
 }
 
+#' @param domain The preference domain from which you wish to retrieve
+#' the keychain search list:
+#' * `"all"`: include all keychains currently on the search list,
+#' * `"user"`: user preference domain,
+#' * `"system"`: system or daemon preference domain,
+#' * `"common"`: keychains common to everyone,
+#' * `"dynamic"`: dynamic search list (typically provided by removable
+#' keychains such as smart cards).
+#'
 #' @export
 #' @rdname macos_keychain
 
-macos_keychain_list <- function() {
-  res <- call_with_cleanup(oskeyring_macos_keychain_list)
+macos_keychain_list <- function(domain = c("all", "user", "system",
+                                           "common", "dynamic")) {
+  domain <- match.arg(domain)
+  ret <- call_with_cleanup(oskeyring_macos_keychain_list, domain)
   data.frame(
-    keyring = res[[1]],
-    num_secrets = res[[2]],
-    locked = res[[3]],
-    stringsAsFactors = FALSE
+    stringsAsFactors = FALSE,
+    path = ret[[1]],
+    is_unlocked = ret[[2]],
+    is_readable = ret[[3]],
+    is_writeable = ret[[4]]
   )
 }
 

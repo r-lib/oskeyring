@@ -48,7 +48,7 @@ macos_item_delete(
 
 macos_keychain_create(keychain, password = NULL)
 
-macos_keychain_list()
+macos_keychain_list(domain = c("all", "user", "system", "common", "dynamic"))
 
 macos_keychain_delete(keychain)
 
@@ -93,6 +93,17 @@ than one value.}
 \item{password}{Password to unlock the keychain, or new password to
 set when creating a new keychain. May be \code{NULL} in interactive
 sessions, to force a secure password dialog.}
+
+\item{domain}{The preference domain from which you wish to retrieve
+the keychain search list:
+\itemize{
+\item \code{"all"}: include all keychains currently on the search list,
+\item \code{"user"}: user preference domain,
+\item \code{"system"}: system or daemon preference domain,
+\item \code{"common"}: keychains common to everyone,
+\item \code{"dynamic"}: dynamic search list (typically provided by removable
+keychains such as smart cards).
+}}
 }
 \description{
 \verb{macos_item_*} functions add, delete, update and search Keychain items.

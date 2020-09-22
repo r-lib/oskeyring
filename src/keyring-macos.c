@@ -642,9 +642,59 @@ SEXP oskeyring_macos_keychain_create(SEXP keyring, SEXP password) {
   return R_NilValue;
 }
 
-SEXP oskeyring_macos_keychain_list() {
-  // TODO
-  return R_NilValue;
+SEXP oskeyring_macos_keychain_list(SEXP domain) {
+
+  const char *cdomain = CHAR(STRING_ELT(domain, 0));
+  CFArrayRef chains = NULL;
+  OSStatus status;
+
+  if (!strcmp(cdomain, "all")) {
+    status = SecKeychainCopySearchList(&chains);
+    oskeyring_macos_handle_status("Cannot get keychain list", status);
+  } else {
+    SecPreferencesDomain mdomain;
+    if (!strcmp(cdomain, "user")) {
+      mdomain = kSecPreferencesDomainUser;
+    } else if (!strcmp(cdomain, "system")) {
+      mdomain = kSecPreferencesDomainSystem;
+    } else if (!strcmp(cdomain, "common")) {
+      mdomain = kSecPreferencesDomainCommon;
+    } else if (!strcmp(cdomain, "dynamic")) {
+      mdomain = kSecPreferencesDomainDynamic;
+    } else {
+      Rf_error("Unknown keychain domain: `%s`.", cdomain);
+    }
+    status = SecKeychainCopyDomainSearchList(mdomain, &chains);
+    oskeyring_macos_handle_status("Cannot get keychain list", status);
+  }
+
+  r_call_on_exit((finalizer_t) CFRelease, (void*) chains);
+  CFIndex i, n = CFArrayGetCount(chains);
+  SEXP result = PROTECT(Rf_allocVector(VECSXP, 4));
+  SET_VECTOR_ELT(result, 0, Rf_allocVector(STRSXP, n));
+  SET_VECTOR_ELT(result, 1, Rf_allocVector(LGLSXP, n));
+  SET_VECTOR_ELT(result, 2, Rf_allocVector(LGLSXP, n));
+  SET_VECTOR_ELT(result, 3, Rf_allocVector(LGLSXP, n));
+  for (i = 0; i < n; i++) {
+    SecKeychainRef chain = (SecKeychainRef) CFArrayGetValueAtIndex(chains, i);
+    UInt32 pathLength = MAXPATHLEN;
+    char pathName[MAXPATHLEN + 1];
+    status = SecKeychainGetPath(chain, &pathLength, pathName);
+    oskeyring_macos_handle_status("Cannot get keychain path", status);
+    pathName[pathLength] = '\0';
+    SET_STRING_ELT(
+      VECTOR_ELT(result, 0), i,
+      Rf_mkCharLen(pathName, pathLength));
+    SecKeychainStatus cstat = 0;
+    status = SecKeychainGetStatus(chain, &cstat);
+    oskeyring_macos_handle_status("Cannot query keychain status", status);
+    LOGICAL(VECTOR_ELT(result, 1))[i] = cstat & kSecUnlockStateStatus;
+    LOGICAL(VECTOR_ELT(result, 2))[i] = cstat & kSecReadPermStatus;
+    LOGICAL(VECTOR_ELT(result, 3))[i] = cstat & kSecWritePermStatus;
+  }
+
+  UNPROTECT(1);
+  return result;
 }
 
 SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
@@ -750,7 +800,7 @@ static const R_CallMethodDef callMethods[]  = {
   REGISTER(oskeyring_macos_delete, 4),
 
   REGISTER(oskeyring_macos_keychain_create,    2),
-  REGISTER(oskeyring_macos_keychain_list,      0),
+  REGISTER(oskeyring_macos_keychain_list,      1),
   REGISTER(oskeyring_macos_keychain_delete,    1),
   REGISTER(oskeyring_macos_keychain_lock,      1),
   REGISTER(oskeyring_macos_keychain_unlock,    2),
