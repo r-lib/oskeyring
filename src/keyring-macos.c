@@ -562,7 +562,7 @@ SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
 
   } else if (status != errSecSuccess) {
     if (resArray != NULL) CFRelease(resArray);
-    oskeyring_macos_handle_status("cannot list passwords", status);
+    oskeyring_macos_handle_status("cannot list keychain items", status);
     return NULL;
   }
 
@@ -577,7 +577,31 @@ SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
 
 SEXP oskeyring_macos_update(SEXP class, SEXP attributes,
                             SEXP match, SEXP update, SEXP keychain) {
-  /* TODO */
+
+  CFMutableDictionaryRef query = CFDictionaryCreateMutable(
+    kCFAllocatorDefault, 0,
+    &kCFTypeDictionaryKeyCallBacks,
+    &kCFTypeDictionaryValueCallBacks);
+
+  r_call_on_exit((finalizer_t) CFRelease, (void*) query);
+
+  CFMutableDictionaryRef query_upd = CFDictionaryCreateMutable(
+    kCFAllocatorDefault, 0,
+    &kCFTypeDictionaryKeyCallBacks,
+    &kCFTypeDictionaryValueCallBacks);
+
+  r_call_on_exit((finalizer_t) CFRelease, (void*) query_upd);
+
+  // TODO: keychain
+  oskeyring__add_class(query, class);
+  oskeyring__add_attributes(query, attributes);
+  oskeyring__add_match_params(query, match);
+
+  oskeyring__add_attributes(query_upd, update);
+
+  OSStatus status = SecItemUpdate(query, query_upd);
+  oskeyring_macos_handle_status("cannot update keychain items", status);
+
   return R_NilValue;
 }
 
