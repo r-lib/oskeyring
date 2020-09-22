@@ -1,7 +1,7 @@
 #! /bin/bash
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "PKG_LIBS=-framework Security" > src/Makevars
+    echo "PKG_LIBS=-framework CoreFoundation -framework Security -framework LocalAuthentication -stdlib=libc++ -lc++" > src/Makevars
 
 else
     if which pkg-config >/dev/null 2>/dev/null && pkg-config libsecret-1; then

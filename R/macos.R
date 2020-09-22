@@ -74,7 +74,8 @@ format.oskeyring_macos_item <- function(x, ...) {
   attr <- x$attributes[sort(names(x$attributes))]
   c(
     paste0("<oskeyring_macos_item: ", x$class, ">"),
-    paste0(" ", names(attr), ": ", format_attr(attr))
+    paste0(" ", names(attr), ": ", format_attr(attr)),
+    if (!is.null(x$value)) " value: <-- hidden -->"
   )
 }
 
@@ -87,7 +88,8 @@ print.oskeyring_macos_item <- function(x, ...) {
 
 #' @param item Keychain item, creted via [macos_item()] or returned
 #' by oskeyking itself.
-#' @param keychain Which keychain to use. `NULL` means the default one.
+#' @param keychain Select an alternative keychain, instead of the default.
+#' Not implemented yet.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -113,19 +115,24 @@ macos_item_add <- function(item, keychain = NULL) {
 #' can limit the results to a specific number of items, control case
 #' sensitivity when matching string attributes, etc. See 'Search parameters'
 #' below.
+#' @param return_data Whether to include the secret data in the
+#' search result.
 #'
 #' @export
 #' @rdname macos_keychain
 
 macos_item_search <- function(class = "generic_password", attributes = list(),
-                              match = list(), keychain = NULL) {
+                              match = list(), return_data = FALSE,
+                              keychain = NULL) {
   stopifnot(
     class %in% macos_item_classes(),
     is_macos_attributes(attributes, class),
     is_macos_match(match),
+    is_flag(return_data),
     is.null(keychain)
   )
-  call_with_cleanup(oskeyring_macos_search, class, attributes, match, keychain)
+  call_with_cleanup(oskeyring_macos_search, class, attributes, match,
+                    return_data, keychain)
 }
 
 #' @param update Named list specifying the new values of attributes.
@@ -359,7 +366,6 @@ is_macos_attributes <- function(attr, class) {
 macos_match_options <- function() {
   list(
     ## TODO: authentication_context,
-    ## TODO: use_authentication_uI,
     ## TODO: use_operation_prompt
     ## policy,
     ## issuers,
@@ -382,7 +388,13 @@ macos_match_options <- function() {
     limit = paste0(
       "[logical(1)] This value specifies the maximum number of results ",
       "to return or otherwise act upon. Use `Inf` to specify all ",
-      "matching items")
+      "matching items"),
+    use_authentication_ui = paste0(
+      "[character(1)] Whether or not the user may be prompted for ",
+      "authentication, if needed. Possible values: \"allow\" (allow UI ",
+      "dialogs), \"fail\" (fail if authentication is needed), ",
+      "\"skip\" (skip items that need authenticartion). Default is ",
+      "\"allow\".")
   )
 }
 

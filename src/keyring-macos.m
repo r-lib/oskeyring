@@ -6,16 +6,18 @@ void oskeyring_macos_dummy() { }
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <Security/Security.h>
+#include <LocalAuthentication/LocalAuthentication.h>
 
-#include <R.h>
+#define R_NO_REMAP 1
+
+#include "oskeyring.h"
+#include "cleancall.h"
+
 #include <R_ext/Rdynload.h>
 #include <Rinternals.h>
 
 #include <sys/param.h>
 #include <string.h>
-
-#include "oskeyring.h"
-#include "cleancall.h"
 
 // ------------------------------------------------------------------------
 // Conversion from SEXP to CF
@@ -72,7 +74,7 @@ struct macos_attr_protocol_t {
 static struct macos_attr_protocol_t protocols[MACOS_ATTR_PROTOCOL_NUM];
 
 #define X(b,c) do {                                                     \
-    if (idx >= MACOS_ATTR_PROTOCOL_NUM) error("too many protocols");    \
+    if (idx >= MACOS_ATTR_PROTOCOL_NUM) Rf_error("too many protocols");    \
     protocols[idx].cf_label = (void*) kSecAttrProtocol ## b;            \
     protocols[idx++].r_name = c;                                        \
   } while (0)                                                           \
@@ -122,7 +124,7 @@ struct macos_attr_protocol_t *oskeyring_find_protocol(const char *name) {
     if (protocols[i].cf_label == NULL) break;
     if (!strcasecmp(name, protocols[i].r_name)) return &protocols[i];
   }
-  error("Unknown Keychain API Protocol attribute: `%s`", name);
+  Rf_error("Unknown Keychain API Protocol attribute: `%s`", name);
 }
 
 struct macos_attr_protocol_t
@@ -162,7 +164,7 @@ const void *cf_value(SEXPTYPE type, SEXP x) {
     return cf_prot(x);
     break;
   default:
-    error("Unsupported attribute type in oskeyring");
+    Rf_error("Unsupported attribute type in oskeyring");
     break;
   }
 }
@@ -186,26 +188,26 @@ SEXP as_chr1(CFStringRef cs) {
     return ret;
   } else {
     free(buffer);
-    error("Failed to retrieve Keychain item attribute in UTF-8");
+    Rf_error("Failed to retrieve Keychain item attribute in UTF-8");
     return R_NilValue;
   }
 }
 
 SEXP as_lgl1(CFBooleanRef cb) {
-  return ScalarLogical(cb == kCFBooleanTrue);
+  return Rf_ScalarLogical(cb == kCFBooleanTrue);
 }
 
 SEXP as_int1(CFNumberRef cn) {
   // Seems silly, but CF warns against integers stored as doubles...
   double ret;
   Boolean st = CFNumberGetValue(cn, kCFNumberDoubleType, &ret);
-  if (!st) warning("Lossy conversion of number in Keychain attribute");
-  return ScalarInteger((int) ret);
+  if (!st) Rf_warning("Lossy conversion of number in Keychain attribute");
+  return Rf_ScalarInteger((int) ret);
 }
 
 SEXP as_raw(CFDataRef cd) {
   size_t len = CFDataGetLength(cd);
-  SEXP ret = PROTECT(allocVector(RAWSXP, len));
+  SEXP ret = PROTECT(Rf_allocVector(RAWSXP, len));
   CFDataGetBytes(cd, CFRangeMake(0, len), RAW(ret));
   UNPROTECT(1);
   return ret;
@@ -214,11 +216,11 @@ SEXP as_raw(CFDataRef cd) {
 SEXP as_date(CFDateRef cd) {
   CFAbsoluteTime cft = CFDateGetAbsoluteTime(cd);
   double t = cft + CF_DATE_OFFSET;
-  SEXP d = PROTECT(ScalarReal(t));
-  SEXP class = PROTECT(allocVector(STRSXP, 2));
+  SEXP d = PROTECT(Rf_ScalarReal(t));
+  SEXP class = PROTECT(Rf_allocVector(STRSXP, 2));
   SET_STRING_ELT(class, 0, Rf_mkCharCE("POSIXct", CE_UTF8));
   SET_STRING_ELT(class, 1, Rf_mkCharCE("POSIXt", CE_UTF8));
-  setAttrib(d, R_ClassSymbol, class);
+  Rf_setAttrib(d, R_ClassSymbol, class);
   UNPROTECT(2);
   return d;
 }
@@ -254,7 +256,7 @@ SEXP as_sexp(SEXPTYPE type, const void *x) {
     return as_prot(x);
     break;
   default:
-    error("Internal oskeyring error, unsupported SEXPTYPE for attribute");
+    Rf_error("Internal oskeyring error, unsupported SEXPTYPE for attribute");
     break;
   }
 }
@@ -277,7 +279,7 @@ struct macos_attr {
 static struct macos_attr macos_attr_list[OSKEYRING_MACOS_ATTR_NUM];
 
 #define X(b,c,d,e) do {                                                 \
-    if (idx >= OSKEYRING_MACOS_ATTR_NUM) error("too many attr types");  \
+    if (idx >= OSKEYRING_MACOS_ATTR_NUM) Rf_error("too many attr types");  \
     macos_attr_list[idx].cf_label = (void*) kSecAttr ## b;              \
     macos_attr_list[idx].r_name = c;                                    \
     macos_attr_list[idx].cf_type = d;                                   \
@@ -316,7 +318,7 @@ struct macos_attr *oskeyring_find_attr(const char *name) {
     if (macos_attr_list[i].cf_label == NULL) break;
     if (!strcmp(name, macos_attr_list[i].r_name)) return &macos_attr_list[i];
   }
-  error("Unknown Keychain item attribute: `%s`", name);
+  Rf_error("Unknown Keychain item attribute: `%s`", name);
 }
 
 struct macos_attr *oskeyring_find_attr_by_cf_label(CFStringRef label) {
@@ -331,54 +333,118 @@ struct macos_attr *oskeyring_find_attr_by_cf_label(CFStringRef label) {
 void oskeyring__add_class(CFMutableDictionaryRef query, SEXP class) {
   const char *cclass = CHAR(STRING_ELT(class, 0));
   if (!strcmp(S__GENERIC_PASSWORD, cclass)) {
-    CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword);
+    CFDictionarySetValue(query, kSecClass, kSecClassGenericPassword);
   } else if (!strcmp(S__INTERNET_PASSWORD, cclass)) {
-    CFDictionaryAddValue(query, kSecClass, kSecClassInternetPassword);
+    CFDictionarySetValue(query, kSecClass, kSecClassInternetPassword);
   } else {
-    error("Unknown Keychain item class: `%s`", cclass);
+    Rf_error("Unknown Keychain item class: `%s`", cclass);
   }
 }
 
 void oskeyring__add_attributes(CFMutableDictionaryRef query, SEXP attr) {
   size_t i, n = LENGTH(attr);
-  SEXP nms = getAttrib(attr, R_NamesSymbol);
+  SEXP nms = Rf_getAttrib(attr, R_NamesSymbol);
   for (i = 0; i < n; i++) {
     const char *name = CHAR(STRING_ELT(nms, i));
     SEXP elt = VECTOR_ELT(attr, i);
     struct macos_attr *rec = oskeyring_find_attr(name);
-    CFDictionaryAddValue(query, rec->cf_label, cf_value(rec->r_type, elt));
+    CFDictionarySetValue(query, rec->cf_label, cf_value(rec->r_type, elt));
   }
+}
+
+void context_free(LAContext *context) {
+  [context release];
 }
 
 void oskeyring__add_match_params(CFMutableDictionaryRef query, SEXP attr) {
   size_t i, n = LENGTH(attr);
-  SEXP nms = getAttrib(attr, R_NamesSymbol);
+  SEXP nms = Rf_getAttrib(attr, R_NamesSymbol);
+  LAContext* context = [[LAContext alloc] init];
+  NSError* error = nil;
+  bool can_authenticate = [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error];
+  r_call_on_exit((finalizer_t) context_free, context);
+
+  if (can_authenticate) {
+    REprintf("YES\n");
+  } else {
+    REprintf("NO\n");
+  }
+
+  NSData* data = [NSData dataWithBytes:(const void *)"Ztrauq1" length:7];
+  [context setCredential:data type:LACredentialTypeApplicationPassword];
+  bool has = [context isCredentialSet:LACredentialTypeApplicationPassword];
+
+  if (has) {
+    REprintf("HAS\n");
+  } else {
+    REprintf("HAS NOT\n");
+  }
+
+  dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+  NSString *message = nil;
+  message = [[NSString alloc] initWithString:@"Hello there!"];
+  __block int result = 2;
+  [context evaluatePolicy:LAPolicyDeviceOwnerAuthentication
+          localizedReason:message reply:^(BOOL success, NSError* error) {
+      result = (int) success;
+      dispatch_semaphore_signal(sema);
+  }];
+
+  while (result == 2) {
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+  }
+  dispatch_release(sema);
+
+  has = [context isCredentialSet:LACredentialTypeApplicationPassword];
+
+  if (has) {
+    REprintf("HAS\n");
+  } else {
+    REprintf("HAS NOT\n");
+  }
 
   // Default is all matching records
-  CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitAll);
+  CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitAll);
+  CFDictionarySetValue(query, kSecUseAuthenticationContext, context);
 
   for (i = 0; i < n; i++) {
     const char *name = CHAR(STRING_ELT(nms, i));
     SEXP elt = VECTOR_ELT(attr, i);
     if (!strcmp(name, "case_insensitive")) {
-      CFDictionaryAddValue(query, kSecMatchCaseInsensitive, cf_value(LGLSXP, elt));
+      CFDictionarySetValue(query, kSecMatchCaseInsensitive, cf_value(LGLSXP, elt));
     } else if (!strcmp(name, "diacritic_insensitive")) {
-      CFDictionaryAddValue(query, kSecMatchDiacriticInsensitive, cf_value(LGLSXP, elt));
+      CFDictionarySetValue(query, kSecMatchDiacriticInsensitive, cf_value(LGLSXP, elt));
     } else if (!strcmp(name, "width_insensitive")) {
-      CFDictionaryAddValue(query, kSecMatchWidthInsensitive, cf_value(LGLSXP, elt));
+      CFDictionarySetValue(query, kSecMatchWidthInsensitive, cf_value(LGLSXP, elt));
     } else if (!strcmp(name, "limit")) {
       double val = -1;
       if (Rf_isInteger(elt)) val = INTEGER(elt)[0];
       if (Rf_isReal(elt)) val = REAL(elt)[0];
-      if (val <= 0) error("Invalid `limit` for Keychain search");
+      if (val <= 0) Rf_error("Invalid `limit` for Keychain search");
       if (!R_FINITE(val)) {
         CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitAll);
       } else {
         CFDictionarySetValue(query, kSecMatchLimit,
                              cf_int1(Rf_coerceVector(elt, INTSXP)));
       }
+    } else if (!strcmp(name, "use_authentication_ui")) {
+      const char *ui = CHAR(STRING_ELT(elt, 0));
+      if (!strcmp(ui, "allow")) {
+        CFDictionarySetValue(query, kSecUseAuthenticationUI,
+                             kSecUseAuthenticationUIAllow);
+      } else if (!strcmp(ui, "fail")) {
+        REprintf("Setting fail\n");
+        CFDictionarySetValue(query, kSecUseAuthenticationUI,
+                             kSecUseAuthenticationUIFail);
+      } else if (!strcmp(ui, "skip")) {
+        REprintf("Setting skip\n");
+        CFDictionarySetValue(query, kSecUseAuthenticationUI,
+                             kSecUseAuthenticationUISkip);
+      } else {
+        Rf_error("Invalid value for `use_authentication_ui`: `%s`", ui);
+      }
     } else {
-      warning("Unknown keychain match parameter: `%s`", name);
+      Rf_warning("Unknown keychain match parameter: `%s`", name);
     }
   }
 }
@@ -401,9 +467,9 @@ void oskeyring_macos_error(const char *func, OSStatus status) {
   CFStringRef str = SecCopyErrorMessageString(status, NULL);
   const char *buffer = cf_string_to_char(str);
   if (buffer) {
-    error("oskeyring error (macOS Keychain), %s: %s", func, buffer);
+    Rf_error("oskeyring error (macOS Keychain), %s: %s", func, buffer);
   } else {
-    error("oskeyring error (macOS Keychain), %s", func);
+    Rf_error("oskeyring error (macOS Keychain), %s", func);
   }
 }
 
@@ -414,11 +480,12 @@ void oskeyring_macos_handle_status(const char *func, OSStatus status) {
 SEXP oskeyring_as_item(SecKeychainItemRef item) {
   CFDictionaryRef dict = (CFDictionaryRef) item;
   CFStringRef cfclass = CFDictionaryGetValue(dict, kSecClass);
+  CFDataRef data = CFDictionaryGetValue(dict, kSecValueData);
   char *class = 0;
 
   const char *inms[] = { "class", "value", "attributes", "" };
   SEXP ret = PROTECT(Rf_mkNamed(VECSXP, inms));
-  setAttrib(
+  Rf_setAttrib(
     ret,
     R_ClassSymbol,
     Rf_ScalarString(Rf_mkCharCE("oskeyring_macos_item", CE_UTF8))
@@ -429,11 +496,19 @@ SEXP oskeyring_as_item(SecKeychainItemRef item) {
   } else if (cfclass == kSecClassInternetPassword) {
     class = S__INTERNET_PASSWORD;
   } else {
-    error("Unknown Keychain item class");
+    Rf_error("Unknown Keychain item class");
   }
 
   SET_VECTOR_ELT(ret, 0, Rf_ScalarString(Rf_mkCharCE(class, CE_UTF8)));
-  SET_VECTOR_ELT(ret, 1, R_NilValue);
+  if (data == NULL) {
+    SET_VECTOR_ELT(ret, 1, R_NilValue);
+  } else {
+    size_t len = CFDataGetLength(data);
+    SEXP rdata = PROTECT(Rf_allocVector(RAWSXP, len));
+    CFDataGetBytes(data, CFRangeMake(0, len), RAW(rdata));
+    SET_VECTOR_ELT(ret, 1, rdata);
+    UNPROTECT(1);
+  }
 
   CFIndex i, rn = 0, n = CFDictionaryGetCount(dict);
 
@@ -445,9 +520,9 @@ SEXP oskeyring_as_item(SecKeychainItemRef item) {
     rn += (rec != NULL);
   }
 
-  SEXP attr = PROTECT(allocVector(VECSXP, rn));
-  SEXP attrnms = PROTECT(allocVector(STRSXP, rn));
-  setAttrib(attr, R_NamesSymbol, attrnms);
+  SEXP attr = PROTECT(Rf_allocVector(VECSXP, rn));
+  SEXP attrnms = PROTECT(Rf_allocVector(STRSXP, rn));
+  Rf_setAttrib(attr, R_NamesSymbol, attrnms);
   SET_VECTOR_ELT(ret, 2, attr);
   UNPROTECT(2);
 
@@ -467,7 +542,7 @@ SEXP oskeyring_as_item(SecKeychainItemRef item) {
 
 SEXP oskeyring_as_item_list(CFArrayRef arr) {
   CFIndex i, num = CFArrayGetCount(arr);
-  SEXP result = PROTECT(allocVector(VECSXP, num));
+  SEXP result = PROTECT(Rf_allocVector(VECSXP, num));
   for (i = 0; i < num; i++) {
     SecKeychainItemRef item =
       (SecKeychainItemRef) CFArrayGetValueAtIndex(arr, i);
@@ -508,7 +583,7 @@ SEXP oskeyring_macos_add(SEXP item, SEXP keychain) {
   r_call_on_exit((finalizer_t) CFRelease, (void*) query);
 
   oskeyring__add_class(query, list_elt(item, "class"));
-  CFDictionaryAddValue(query, kSecValueData, cf_raw(list_elt(item, "value")));
+  CFDictionarySetValue(query, kSecValueData, cf_raw(list_elt(item, "value")));
   oskeyring__add_attributes(query, list_elt(item, "attributes"));
 
   OSStatus status = SecItemAdd(query, NULL);
@@ -518,7 +593,8 @@ SEXP oskeyring_macos_add(SEXP item, SEXP keychain) {
 }
 
 SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
-                            SEXP match, SEXP keychain) {
+                            SEXP match, SEXP return_data,
+                            SEXP keychain) {
 
   CFMutableDictionaryRef query = CFDictionaryCreateMutable(
     kCFAllocatorDefault, 0,
@@ -533,8 +609,11 @@ SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
   oskeyring__add_match_params(query, match);
 
   CFDictionarySetValue(query, kSecReturnData, kCFBooleanFalse);
-  CFDictionarySetValue(query, kSecReturnRef, kCFBooleanTrue);
+  CFDictionarySetValue(query, kSecReturnRef, kCFBooleanFalse);
   CFDictionarySetValue(query, kSecReturnAttributes, kCFBooleanTrue);
+  if (LOGICAL(return_data)[0]) {
+    CFDictionarySetValue(query, kSecReturnData, kCFBooleanTrue);
+  }
 
   CFArrayRef resArray = NULL;
   OSStatus status = SecItemCopyMatching(query, (CFTypeRef*) &resArray);
@@ -690,7 +769,7 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
 
 SEXP oskeyring_macos_keychain_lock(SEXP keyring) {
   SecKeychainRef keychain =
-    isNull(keyring) ? NULL :
+    Rf_isNull(keyring) ? NULL :
     oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)));
   OSStatus status = SecKeychainLock(keychain);
   if (keychain) CFRelease(keychain);
@@ -701,7 +780,7 @@ SEXP oskeyring_macos_keychain_lock(SEXP keyring) {
 SEXP oskeyring_macos_keychain_unlock(SEXP keyring, SEXP password) {
   const char *cpassword = CHAR(STRING_ELT(password, 0));
   SecKeychainRef keychain =
-    isNull(keyring) ? NULL :
+    Rf_isNull(keyring) ? NULL :
     oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)));
   OSStatus status = SecKeychainUnlock(
     keychain,
@@ -716,14 +795,14 @@ SEXP oskeyring_macos_keychain_unlock(SEXP keyring, SEXP password) {
 
 SEXP oskeyring_macos_keychain_is_locked(SEXP keyring) {
   SecKeychainRef keychain =
-    isNull(keyring) ? NULL :
+    Rf_isNull(keyring) ? NULL :
     oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)));
 
   SecKeychainStatus kstatus;
   OSStatus status = SecKeychainGetStatus(keychain, &kstatus);
   if (status) oskeyring_macos_error("cannot get lock information", status);
 
-  return ScalarLogical(! (kstatus & kSecUnlockStateStatus));
+  return Rf_ScalarLogical(! (kstatus & kSecUnlockStateStatus));
 }
 
 #define REGISTER(method, args) \
@@ -731,7 +810,7 @@ SEXP oskeyring_macos_keychain_is_locked(SEXP keyring) {
 
 static const R_CallMethodDef callMethods[]  = {
   REGISTER(oskeyring_macos_add,    2),
-  REGISTER(oskeyring_macos_search, 4),
+  REGISTER(oskeyring_macos_search, 5),
   REGISTER(oskeyring_macos_update, 5),
   REGISTER(oskeyring_macos_delete, 4),
 
