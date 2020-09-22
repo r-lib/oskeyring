@@ -488,10 +488,11 @@ SEXP oskeyring_as_item_list(CFArrayRef arr) {
   return result;
 }
 
-SecKeychainRef oskeyring_macos_open_keychain(const char *pathName) {
+SecKeychainRef oskeyring_macos_open_keychain(const char *pathName, int fin) {
   SecKeychainRef keychain;
   OSStatus status = SecKeychainOpen(pathName, &keychain);
   oskeyring_macos_handle_status("cannot open keychain", status);
+  if (fin) r_call_on_exit((finalizer_t) CFRelease, (void*) keychain);
 
   /* We need to query the status, because SecKeychainOpen succeeds,
      even if the keychain file does not exists. (!) */
@@ -502,13 +503,30 @@ SecKeychainRef oskeyring_macos_open_keychain(const char *pathName) {
   return keychain;
 }
 
+void oskeyring__add_keychain(CFMutableDictionaryRef query, SEXP keychain) {
+  if (!Rf_isNull(keychain)) {
+    const char *path = CHAR(STRING_ELT(keychain, 0));
+    SecKeychainRef chain = oskeyring_macos_open_keychain(path, 1);
+    CFDictionarySetValue(query, kSecUseKeychain, chain);
+  }
+}
+
+void oskeyring__add_keychain_list(CFMutableDictionaryRef query, SEXP keychain) {
+  if (!Rf_isNull(keychain)) {
+    const char *path = CHAR(STRING_ELT(keychain, 0));
+    SecKeychainRef chain = oskeyring_macos_open_keychain(path, 0);
+    const void *vals[1] = { chain };
+    CFArrayRef arr = CFArrayCreate(NULL, vals, 1, NULL);
+    r_call_on_exit((finalizer_t) CFRelease, (void*) arr);
+    CFDictionarySetValue(query, kSecMatchSearchList, arr);
+  }
+}
+
 // ------------------------------------------------------------------------
 // API
 // ------------------------------------------------------------------------
 
 SEXP oskeyring_macos_add(SEXP item, SEXP keychain) {
-
-  // TODO: keychain
 
   CFMutableDictionaryRef query = CFDictionaryCreateMutable(
     kCFAllocatorDefault, 0,
@@ -520,6 +538,7 @@ SEXP oskeyring_macos_add(SEXP item, SEXP keychain) {
   oskeyring__add_class(query, list_elt(item, "class"));
   CFDictionarySetValue(query, kSecValueData, cf_raw(list_elt(item, "value")));
   oskeyring__add_attributes(query, list_elt(item, "attributes"));
+  oskeyring__add_keychain(query, keychain);
 
   OSStatus status = SecItemAdd(query, NULL);
   oskeyring_macos_handle_status("cannot add keychain item", status);
@@ -538,10 +557,10 @@ SEXP oskeyring_macos_search(SEXP class, SEXP attributes,
 
   r_call_on_exit((finalizer_t) CFRelease, (void*) query);
 
-  // TODO: keychain
   oskeyring__add_class(query, class);
   oskeyring__add_attributes(query, attributes);
   oskeyring__add_match_params(query, match);
+  oskeyring__add_keychain_list(query, keychain);
 
   CFDictionarySetValue(query, kSecReturnData, kCFBooleanFalse);
   CFDictionarySetValue(query, kSecReturnRef, kCFBooleanFalse);
@@ -592,10 +611,10 @@ SEXP oskeyring_macos_update(SEXP class, SEXP attributes,
 
   r_call_on_exit((finalizer_t) CFRelease, (void*) query_upd);
 
-  // TODO: keychain
   oskeyring__add_class(query, class);
   oskeyring__add_attributes(query, attributes);
   oskeyring__add_match_params(query, match);
+  oskeyring__add_keychain(query, keychain);
 
   oskeyring__add_attributes(query_upd, update);
 
@@ -615,10 +634,10 @@ SEXP oskeyring_macos_delete(SEXP class, SEXP attributes,
 
   r_call_on_exit((finalizer_t) CFRelease, (void*) query);
 
-  // TODO: keychain
   oskeyring__add_class(query, class);
   oskeyring__add_attributes(query, attributes);
   oskeyring__add_match_params(query, match);
+  oskeyring__add_keychain_list(query, keychain);
 
   OSStatus status = SecItemDelete(query);
   oskeyring_macos_handle_status("cannot delete keychain items", status);
@@ -783,9 +802,8 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
   CFRelease(newkeyrings);
 
   /* And now remove the file as well... */
-  SecKeychainRef keychain = oskeyring_macos_open_keychain(ckeyring);
+  SecKeychainRef keychain = oskeyring_macos_open_keychain(ckeyring, 1);
   status = SecKeychainDelete(keychain);
-  CFRelease(keychain);
   oskeyring_macos_handle_status("cannot delete keyring", status);
 
   return R_NilValue;
@@ -794,9 +812,8 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
 SEXP oskeyring_macos_keychain_lock(SEXP keyring) {
   SecKeychainRef keychain =
     Rf_isNull(keyring) ? NULL :
-    oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)));
+    oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)), 1);
   OSStatus status = SecKeychainLock(keychain);
-  if (keychain) CFRelease(keychain);
   oskeyring_macos_handle_status("cannot lock keychain", status);
   return R_NilValue;
 }
@@ -805,14 +822,13 @@ SEXP oskeyring_macos_keychain_unlock(SEXP keyring, SEXP password) {
   const char *cpassword = CHAR(STRING_ELT(password, 0));
   SecKeychainRef keychain =
     Rf_isNull(keyring) ? NULL :
-    oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)));
+    oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)), 1);
   OSStatus status = SecKeychainUnlock(
     keychain,
     (UInt32) strlen(cpassword),
      (const void*) cpassword,
     /* usePassword = */ TRUE);
 
-  if (keychain) CFRelease(keychain);
   oskeyring_macos_handle_status("cannot unlock keychain", status);
   return R_NilValue;
 }
@@ -820,7 +836,7 @@ SEXP oskeyring_macos_keychain_unlock(SEXP keyring, SEXP password) {
 SEXP oskeyring_macos_keychain_is_locked(SEXP keyring) {
   SecKeychainRef keychain =
     Rf_isNull(keyring) ? NULL :
-    oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)));
+    oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)), 1);
 
   SecKeychainStatus kstatus;
   OSStatus status = SecKeychainGetStatus(keychain, &kstatus);

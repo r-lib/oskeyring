@@ -97,7 +97,7 @@ print.oskeyring_macos_item <- function(x, ...) {
 macos_item_add <- function(item, keychain = NULL) {
   stopifnot(
     inherits(item, "oskeyring_macos_item"),
-    is.null(keychain)
+    is_string(keychain) || is.null(keychain)
   )
   invisible(call_with_cleanup(oskeyring_macos_add, item, keychain))
 }
@@ -133,7 +133,7 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
     is_macos_attributes(attributes, class),
     is_macos_match(match),
     is_flag(return_data),
-    is.null(keychain)
+    is_string(keychain) || is.null(keychain)
   )
   call_with_cleanup(oskeyring_macos_search, class, attributes, match,
                     return_data, keychain)
@@ -151,7 +151,7 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
     is_macos_attributes(attributes, class),
     is_macos_match(match),
     is_macos_attributes(update, class),
-    is.null(keychain)
+    is_string(keychain) || is.null(keychain)
   )
 
   invisible(
@@ -168,7 +168,7 @@ macos_item_delete <- function(class = "generic_password", attributes = list(),
     class %in% macos_item_classes(),
     is_macos_attributes(attributes, class),
     is_macos_match(match),
-    is.null(keychain)
+    is_string(keychain) || is.null(keychain)
   )
 
   invisible(
