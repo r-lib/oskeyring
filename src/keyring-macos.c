@@ -6,7 +6,6 @@ void oskeyring_macos_dummy() { }
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <Security/Security.h>
-#include <LocalAuthentication/LocalAuthentication.h>
 
 #define R_NO_REMAP 1
 
@@ -352,60 +351,12 @@ void oskeyring__add_attributes(CFMutableDictionaryRef query, SEXP attr) {
   }
 }
 
-void context_free(LAContext *context) {
-  [context release];
-}
-
 void oskeyring__add_match_params(CFMutableDictionaryRef query, SEXP attr) {
   size_t i, n = LENGTH(attr);
   SEXP nms = Rf_getAttrib(attr, R_NamesSymbol);
-  LAContext* context = [[LAContext alloc] init];
-  NSError* error = nil;
-  bool can_authenticate = [context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:&error];
-  r_call_on_exit((finalizer_t) context_free, context);
-
-  if (can_authenticate) {
-    REprintf("YES\n");
-  } else {
-    REprintf("NO\n");
-  }
-
-  NSData* data = [NSData dataWithBytes:(const void *)"Ztrauq1" length:7];
-  [context setCredential:data type:LACredentialTypeApplicationPassword];
-  bool has = [context isCredentialSet:LACredentialTypeApplicationPassword];
-
-  if (has) {
-    REprintf("HAS\n");
-  } else {
-    REprintf("HAS NOT\n");
-  }
-
-  dispatch_semaphore_t sema = dispatch_semaphore_create(0);
-  NSString *message = nil;
-  message = [[NSString alloc] initWithString:@"Hello there!"];
-  __block int result = 2;
-  [context evaluatePolicy:LAPolicyDeviceOwnerAuthentication
-          localizedReason:message reply:^(BOOL success, NSError* error) {
-      result = (int) success;
-      dispatch_semaphore_signal(sema);
-  }];
-
-  while (result == 2) {
-    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
-  }
-  dispatch_release(sema);
-
-  has = [context isCredentialSet:LACredentialTypeApplicationPassword];
-
-  if (has) {
-    REprintf("HAS\n");
-  } else {
-    REprintf("HAS NOT\n");
-  }
 
   // Default is all matching records
   CFDictionarySetValue(query, kSecMatchLimit, kSecMatchLimitAll);
-  CFDictionarySetValue(query, kSecUseAuthenticationContext, context);
 
   for (i = 0; i < n; i++) {
     const char *name = CHAR(STRING_ELT(nms, i));
@@ -426,22 +377,6 @@ void oskeyring__add_match_params(CFMutableDictionaryRef query, SEXP attr) {
       } else {
         CFDictionarySetValue(query, kSecMatchLimit,
                              cf_int1(Rf_coerceVector(elt, INTSXP)));
-      }
-    } else if (!strcmp(name, "use_authentication_ui")) {
-      const char *ui = CHAR(STRING_ELT(elt, 0));
-      if (!strcmp(ui, "allow")) {
-        CFDictionarySetValue(query, kSecUseAuthenticationUI,
-                             kSecUseAuthenticationUIAllow);
-      } else if (!strcmp(ui, "fail")) {
-        REprintf("Setting fail\n");
-        CFDictionarySetValue(query, kSecUseAuthenticationUI,
-                             kSecUseAuthenticationUIFail);
-      } else if (!strcmp(ui, "skip")) {
-        REprintf("Setting skip\n");
-        CFDictionarySetValue(query, kSecUseAuthenticationUI,
-                             kSecUseAuthenticationUISkip);
-      } else {
-        Rf_error("Invalid value for `use_authentication_ui`: `%s`", ui);
       }
     } else {
       Rf_warning("Unknown keychain match parameter: `%s`", name);

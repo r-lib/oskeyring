@@ -27,6 +27,7 @@ macos_item_search(
   class = "generic_password",
   attributes = list(),
   match = list(),
+  return_data = FALSE,
   keychain = NULL
 )
 
@@ -79,6 +80,13 @@ by oskeyking itself.}
 can limit the results to a specific number of items, control case
 sensitivity when matching string attributes, etc. See 'Search parameters'
 below.}
+
+\item{return_data}{Whether to include the secret data in the
+search result. If this is set to \code{TRUE}, then you'll have to set the
+\code{limit} parameter (in the \code{match} argument) to a finite value.
+If this is \code{TRUE}, then macOS will prompt you for passwords if necessary.
+You might get multiple password prompts, if you set \code{limit} to a larger
+than one value.}
 
 \item{update}{Named list specifying the new values of attributes.}
 

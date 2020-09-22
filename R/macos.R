@@ -116,7 +116,11 @@ macos_item_add <- function(item, keychain = NULL) {
 #' sensitivity when matching string attributes, etc. See 'Search parameters'
 #' below.
 #' @param return_data Whether to include the secret data in the
-#' search result.
+#' search result. If this is set to `TRUE`, then you'll have to set the
+#' `limit` parameter (in the `match` argument) to a finite value.
+#' If this is `TRUE`, then macOS will prompt you for passwords if necessary.
+#' You might get multiple password prompts, if you set `limit` to a larger
+#' than one value.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -366,6 +370,7 @@ is_macos_attributes <- function(attr, class) {
 macos_match_options <- function() {
   list(
     ## TODO: authentication_context,
+    ## TODO: how does use_authentication_ui work?
     ## TODO: use_operation_prompt
     ## policy,
     ## issuers,
@@ -388,13 +393,7 @@ macos_match_options <- function() {
     limit = paste0(
       "[logical(1)] This value specifies the maximum number of results ",
       "to return or otherwise act upon. Use `Inf` to specify all ",
-      "matching items"),
-    use_authentication_ui = paste0(
-      "[character(1)] Whether or not the user may be prompted for ",
-      "authentication, if needed. Possible values: \"allow\" (allow UI ",
-      "dialogs), \"fail\" (fail if authentication is needed), ",
-      "\"skip\" (skip items that need authenticartion). Default is ",
-      "\"allow\".")
+      "matching items")
   )
 }
 
