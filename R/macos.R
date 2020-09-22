@@ -153,7 +153,10 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
     is_macos_attributes(update, class),
     is.null(keychain)
   )
-  call_with_cleanup(oskeyring_macos_update, class, attributes, match, update, keychain)
+
+  invisible(
+    call_with_cleanup(oskeyring_macos_update, class, attributes, match, update, keychain)
+  )
 }
 
 #' @export
@@ -167,7 +170,10 @@ macos_item_delete <- function(class = "generic_password", attributes = list(),
     is_macos_match(match),
     is.null(keychain)
   )
-  call_with_cleanup(oskeyring_macos_delete, class, attributes, match, keychain)
+
+  invisible(
+    call_with_cleanup(oskeyring_macos_delete, class, attributes, match, keychain)
+  )
 }
 
 # ------------------------------------------------------------------------

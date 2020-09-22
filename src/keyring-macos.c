@@ -607,7 +607,22 @@ SEXP oskeyring_macos_update(SEXP class, SEXP attributes,
 
 SEXP oskeyring_macos_delete(SEXP class, SEXP attributes,
                             SEXP match, SEXP keychain) {
-  /* TODO */
+
+  CFMutableDictionaryRef query = CFDictionaryCreateMutable(
+    kCFAllocatorDefault, 0,
+    &kCFTypeDictionaryKeyCallBacks,
+    &kCFTypeDictionaryValueCallBacks);
+
+  r_call_on_exit((finalizer_t) CFRelease, (void*) query);
+
+  // TODO: keychain
+  oskeyring__add_class(query, class);
+  oskeyring__add_attributes(query, attributes);
+  oskeyring__add_match_params(query, match);
+
+  OSStatus status = SecItemDelete(query);
+  oskeyring_macos_handle_status("cannot delete keychain items", status);
+
   return R_NilValue;
 }
 
