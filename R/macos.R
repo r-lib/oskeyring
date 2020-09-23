@@ -33,7 +33,7 @@
 #' `macos_item_add()` adds an item to the keychain. If there is already an
 #' item with the same primary keys, then it will error.
 #'
-#' ```{r, include = FALSE}
+#' ```{r, include = FALSE, eval = get_os() == "macos"}
 #' # Remove, to make sure that 'add' works
 #' tryCatch(
 #'   macos_item_delete(attributes = list(service = "My service")),
@@ -41,7 +41,7 @@
 #' )
 #' ```
 #'
-#' ```{r}
+#' ```{r, eval = get_os() == "macos"}
 #' macos_item_add(it)
 #' ```
 #'
@@ -50,13 +50,13 @@
 #' might create a password entry dialog. If `return_data` is `TRUE` then
 #' you need to set the `limit` match condition to a (small) finite number.
 #'
-#' ```{r}
+#' ```{r, eval = get_os() == "macos"}
 #' macos_item_search(attributes = list(service = "My service"))
 #' ```
 #'
 #' `macos_item_update()` updates existing Keychain items.
 #'
-#' ```{r}
+#' ```{r, eval = get_os() == "macos"}
 #' macos_item_update(
 #'   attributes = list(service = "My service", account = "Gabor"),
 #'   update = list(account = "Gabor Csardi")
@@ -67,7 +67,7 @@
 #' `macos_item_delete()` deletes one or more Keychain items. Note that
 #' all matching items will be deleted.
 #'
-#' ```{r}
+#' ```{r, eval = get_os() == "macos"}
 #' macos_item_delete(attributes = list(service = "My service"))
 #' macos_item_search(attributes = list(service = "My service"))
 #' ```
@@ -268,6 +268,7 @@ print.oskeyring_macos_item <- function(x, ...) {
 #' @rdname macos_keychain
 
 macos_item_add <- function(item, keychain = NULL) {
+  os_check("macOS")
   stopifnot(
     inherits(item, "oskeyring_macos_item"),
     is_string(keychain) || is.null(keychain)
@@ -296,6 +297,7 @@ macos_item_add <- function(item, keychain = NULL) {
 macos_item_search <- function(class = "generic_password", attributes = list(),
                               match = list(), return_data = FALSE,
                               keychain = NULL) {
+  os_check("macOS")
   stopifnot(
     class %in% macos_item_classes(),
     is_macos_attributes(attributes, class),
@@ -314,6 +316,7 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
 
 macos_item_update <- function(class = "generic_password", attributes = list(),
                               match = list(), update = list(), keychain = NULL) {
+  os_check("macOS")
   stopifnot(
     class %in% macos_item_classes(),
     is_macos_attributes(attributes, class),
@@ -332,6 +335,7 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
 
 macos_item_delete <- function(class = "generic_password", attributes = list(),
                               match = list(), keychain = NULL) {
+  os_check("macOS")
   stopifnot(
     class %in% macos_item_classes(),
     is_macos_attributes(attributes, class),
@@ -362,6 +366,7 @@ macos_item_delete <- function(class = "generic_password", attributes = list(),
 #' @rdname macos_keychain
 
 macos_keychain_create <- function(keychain, password = NULL) {
+  os_check("macOS")
   stopifnot(
     is_string(keychain),
     is_string(password) || is.null(password)
@@ -386,6 +391,7 @@ macos_keychain_create <- function(keychain, password = NULL) {
 
 macos_keychain_list <- function(domain = c("all", "user", "system",
                                            "common", "dynamic")) {
+  os_check("macOS")
   domain <- match.arg(domain)
   ret <- call_with_cleanup(oskeyring_macos_keychain_list, domain)
   data.frame(
@@ -401,6 +407,7 @@ macos_keychain_list <- function(domain = c("all", "user", "system",
 #' @rdname macos_keychain
 
 macos_keychain_delete <- function(keychain) {
+  os_check("macOS")
   stopifnot(
     is_string(keychain)
   )
@@ -418,6 +425,7 @@ macos_keychain_delete <- function(keychain) {
 #' @rdname macos_keychain
 
 macos_keychain_lock <- function(keychain = NULL) {
+  os_check("macOS")
   stopifnot(
     is_string(keychain) || is.null(keychain)
   )
@@ -429,6 +437,7 @@ macos_keychain_lock <- function(keychain = NULL) {
 #' @rdname macos_keychain
 
 macos_keychain_unlock <- function(keychain = NULL, password = NULL) {
+  os_check("macOS")
   stopifnot(
     is_string(keychain) || is.null(keychain),
     is_string(password) || is.null(password)
@@ -443,6 +452,7 @@ macos_keychain_unlock <- function(keychain = NULL, password = NULL) {
 #' @rdname macos_keychain
 
 macos_keychain_is_locked <- function(keychain = NULL) {
+  os_check("macOS")
   stopifnot(
     is_string(keychain) || is.null(keychain)
   )

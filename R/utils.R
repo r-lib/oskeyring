@@ -20,3 +20,23 @@ ask_pass <- function(prompt = "Password: ") {
   res <- res %||% askpass::askpass(prompt)
   enc2utf8(res)
 }
+
+os_check <- function(which = c("macOS", "Windows", "Linux")) {
+  which <- match.arg(which)
+  os <- get_os()
+  if (os != tolower(which)) {
+    stop("Unsupported OS. This function only works on ", which, ".")
+  }
+}
+
+get_os <- function() {
+  if (.Platform$OS.type == "windows") {
+    "win"
+  } else if (Sys.info()["sysname"] == "Darwin") {
+    "macos"
+  } else if (Sys.info()[["sysname"]] == "Linux") {
+    "linux"
+  } else {
+    "other"
+  }
+}
