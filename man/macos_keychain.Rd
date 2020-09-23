@@ -14,7 +14,8 @@
 \alias{macos_keychain_lock}
 \alias{macos_keychain_unlock}
 \alias{macos_keychain_is_locked}
-\alias{macos_keychain_file}
+\alias{macos_item_attr}
+\alias{macos_item_match_options}
 \title{Query and manipulate the macOS Keychain}
 \usage{
 macos_item_classes()
@@ -58,7 +59,9 @@ macos_keychain_unlock(keychain = NULL, password = NULL)
 
 macos_keychain_is_locked(keychain = NULL)
 
-macos_keychain_file(keychain = NULL)
+macos_item_attr()
+
+macos_item_match_options()
 }
 \arguments{
 \item{value}{Value of the item, a password, key or certificate. It must
@@ -110,25 +113,195 @@ keychains such as smart cards).
 
 \verb{macos_keychain_*} functions create, delete, list, lock, unlock
 keychains.
+
+\code{macos_item_classes()} lists the supported Keychain item classes.
+\code{macos_item_attr()} lists the supported attributes for these classes.
+\code{macos_item_match_options()} lists the options supported by the
+\code{match} argument of \code{macos_item_search()}.
 }
-\details{
-\subsection{Keychain items}{
-
-TODO
-\subsection{Attributes for different Keychain item classes}{
-
-TODO
-}
-
-}
-
-\subsection{Keychains}{
-
-TODO
+\section{Keychain items}{
+\code{macos_item_classes()} returns the currently supported Keychain item
+classes.\if{html}{\out{<div class="r">}}\preformatted{macos_item_classes()
+}\if{html}{\out{</div>}}\preformatted{## [1] "generic_password"  "internet_password"
 }
 
-\subsection{Search Parameters}{
-
-TODO
+\code{macos_item()} creates a new Keychain item. See the next section about
+the attributes that are supported for the various item types.\if{html}{\out{<div class="r">}}\preformatted{it <- macos_item("secret", list(service = "My service", account = "Gabor"))
+it
+}\if{html}{\out{</div>}}\preformatted{## <oskeyring_macos_item: generic_password>
+##  account: Gabor
+##  service: My service
+##  value: <-- hidden -->
 }
+
+\code{macos_item_add()} adds an item to the keychain. If there is already an
+item with the same primary keys, then it will error.\if{html}{\out{<div class="r">}}\preformatted{macos_item_add(it)
+}\if{html}{\out{</div>}}
+
+\code{macos_item_search()} searches for Keychain items. If \code{return_data} is
+\code{TRUE} then it also returns the secret data. Returning the secret data
+might create a password entry dialog. If \code{return_data} is \code{TRUE} then
+you need to set the \code{limit} match condition to a (small) finite number.\if{html}{\out{<div class="r">}}\preformatted{macos_item_search(attributes = list(service = "My service"))
+}\if{html}{\out{</div>}}\preformatted{## [[1]]
+## <oskeyring_macos_item: generic_password>
+##  account: Gabor
+##  creation_date: 2020-09-23 09:58:29
+##  label: My service
+##  modification_date: 2020-09-23 09:58:29
+##  service: My service
+}
+
+\code{macos_item_update()} updates existing Keychain items.\if{html}{\out{<div class="r">}}\preformatted{macos_item_update(
+  attributes = list(service = "My service", account = "Gabor"),
+  update = list(account = "Gabor Csardi")
+)
+macos_item_search(attributes = list(service = "My service"))
+}\if{html}{\out{</div>}}\preformatted{## [[1]]
+## <oskeyring_macos_item: generic_password>
+##  account: Gabor Csardi
+##  creation_date: 2020-09-23 09:58:29
+##  label: My service
+##  modification_date: 2020-09-23 09:58:29
+##  service: My service
+}
+
+\code{macos_item_delete()} deletes one or more Keychain items. Note that
+all matching items will be deleted.\if{html}{\out{<div class="r">}}\preformatted{macos_item_delete(attributes = list(service = "My service"))
+macos_item_search(attributes = list(service = "My service"))
+}\if{html}{\out{</div>}}\preformatted{## list()
+}
+\subsection{Keychain Item Attributes}{
+\itemize{
+\item The set of supported attributes depends on the class of the item.
+\item oskeyring supports the following item classes currently:
+generic_password, internet_password.
+\item A subset of the attributes form a \emph{primary key}. It is not possible
+to add more than one item with the same primary key. See the
+primary keys for the various classes below.
+\item oskeyring does not currently support all attributes that the
+Keychain Services AIP supports.
+\item Some attributes are read-only. If you try to set them when adding
+or updating items, they will be ignored.
+\item If an attribute is not included in the return value of
+\code{macos_item_search()} then it is not set, and its default value is in
+effect.
+}
+\subsection{Attributes for generic passwords}{
+\itemize{
+\item \code{creation_date}: [.POSIXct(1)][read-only] The date the item was created.
+\item \code{modification_date}: [.POSIXct(1)][read-only] The last time the item was updated.
+\item \code{description}: [character(1)] User-visible string describing this kind ofitem (for example, 'Disk image password').
+\item \code{comment}: [character(1)] User-editable comment for this item.
+\item \code{label}: [character(1)] User-visible label for this item.
+\item \code{is_invisible}: [logical(1)] \code{TRUE} if the item is invisible (that is, should not be displayed).
+\item \code{is_negative}: [logical(1)] Indicates whether there is a valid password associated with this keychain item. This is useful if your application doesn't want a password for some particular service to be stored in the keychain, but prefers that it always be entered by the user.
+\item \code{account}: [character(1)][key] Account name.
+\item \code{service}: [character(1)][key] The service associated with this item.
+\item \code{generic}: [character(1)] User-defined attribute.
+\item \code{synchronizable}: [logical(1)] Indicates whether the item in question is synchronized to other devices through iCloud.
+}
+}
+
+\subsection{Attributes for internet passwords}{
+\itemize{
+\item \code{creation_date}: [.POSIXct(1)][read-only] The date the item was created.
+\item \code{modification_date}: [.POSIXct(1)][read-only] The last time the item was updated.
+\item \code{description}: [character(1)] User-visible string describing this kind ofitem (for example, 'Disk image password').
+\item \code{comment}: [character(1)] User-editable comment for this item.
+\item \code{label}: [character(1)] User-visible label for this item.
+\item \code{is_invisible}: [logical(1)] \code{TRUE} if the item is invisible (that is, should not be displayed).
+\item \code{is_negative}: [logical(1)] Indicates whether there is a valid password associated with this keychain item. This is useful if your application doesn't want a password for some particular service to be stored in the keychain, but prefers that it always be entered by the user.
+\item \code{account}: [character(1)][key] Account name.
+\item \code{synchronizable}: [logical(1)] Indicates whether the item in question is synchronized to other devices through iCloud.
+\item \code{security_domain}: [character(1)][key] The item's security domain.
+\item \code{server}: [character(1)][key] Contains the server's domain name or IP address.
+\item \code{protocol}: [character(1)][key] The protocol for this item.
+\item \code{authentication_type}: character[1][key] Authentication type.
+\item \code{port}: [integer(1)][key] Internet port number.
+\item \code{path}: [character(1)][key] A path, typically the path component of the URL
+}
+}
+
+}
+}
+
+\section{Search Parameters}{
+osxkeychain only supports a limited set of search parameters.
+You can provide these for \code{macos_item_search()} as the \code{match} argument:
+\itemize{
+\item \code{limit}: [numeric(1)] This value specifies the maximum number of results to return or otherwise act upon. Use \code{Inf} to specify all matching items.
+}
+}
+
+\section{Keychains}{
+macOs supports multiple keychains.
+There is always a default keychain, which is the user's login keychain,
+unless configured differently.
+There is also a keychain search list.
+Keychains may belong into four non-exclusive categories, see the
+\code{domain} argument of \code{macos_keychain_list()}.
+A keychain is stored in an encrypted file on the disk, see the first
+column of the output of \code{macos_keychain_list()}.
+
+\verb{macos_item_*()} functions have a \code{keychain} attribute to direct or
+restrict the operation to a single keychain only. These are the defaults:
+\itemize{
+\item \code{macos_item_add()} adds the item to the default keychain.
+\item \code{macos_item_search()} searches all keychains in the search list.
+\item \code{macos_item_update()} updates matching items on all keychains in the
+search list.
+\item \code{macos_item_delete()} deletes matching items from all keychains in the
+search list.
+}
+
+\code{macos_keychain_create()} creates a new keychain.
+
+\code{macos_keychain_list()} lists all keychains on the search list.\if{html}{\out{<div class="r">}}\preformatted{new <- "~/Library/Keychains/test.keychain-db"
+macos_keychain_create(new, password = "secret")
+macos_keychain_list()
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{##                                                     path is_unlocked
+## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE
+## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE
+## 3  /Users/gaborcsardi/Library/Keychains/test.keychain-db        TRUE
+## 4                     /Library/Keychains/System.keychain       FALSE
+##   is_readable is_writeable
+## 1        TRUE         TRUE
+## 2        TRUE        FALSE
+## 3        TRUE         TRUE
+## 4        TRUE        FALSE
+}\if{html}{\out{</div>}}
+
+\code{macos_keychain_lock()} locks a keychain.
+\code{macos_keychain_unlock()} unlocks a keychain.
+\code{macos_keychain_is_locked()} checks if a keychain is locked.\if{html}{\out{<div class="r">}}\preformatted{macos_keychain_lock(new)
+macos_keychain_is_locked(new)
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## [1] TRUE
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{macos_keychain_unlock(new, password = "secret")
+macos_keychain_is_locked(new)
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## [1] FALSE
+}\if{html}{\out{</div>}}
+
+\code{macos_keychain_delete()} deletes a keychain: it removes it from the
+search list and deletes the data from the disk. It currently refuses to
+delete the user's login keychain and the system keychain. Use Keychain
+Access instead if you want to delete these. (Only do this if you are
+aware of the bad consequences.)\if{html}{\out{<div class="r">}}\preformatted{macos_keychain_delete(new)
+macos_keychain_list()
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{##                                                     path is_unlocked
+## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE
+## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE
+## 3                     /Library/Keychains/System.keychain       FALSE
+##   is_readable is_writeable
+## 1        TRUE         TRUE
+## 2        TRUE        FALSE
+## 3        TRUE        FALSE
+}\if{html}{\out{</div>}}
+}
+
+\examples{
+# See above
+}
+\seealso{
+The Keychain Services API documentation at
+\url{https://developer.apple.com/documentation/security/keychain_services}.
 }
