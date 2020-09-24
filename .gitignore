@@ -3,4 +3,5 @@
 .RData
 /src/Makevars
 /src/oskeyring.so
+/src/oskeyring.dll
 /src/*.o
