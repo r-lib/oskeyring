@@ -69,7 +69,8 @@ SEXP oskeyring_windows_write(SEXP item, SEXP preserve) {
   if (!Rf_isNull(comment)) cred.Comment = (wchar_t*) RAW(comment);
   SEXP credential_blob = list_elt(item, "credential_blob");
   cred.CredentialBlobSize = Rf_length(credential_blob);
-  cred.CredentialBlob = RAW(credential_blob);
+  cred.CredentialBlob =
+    Rf_isNull(credential_blob) ? NULL : RAW(credential_blob);
   const char *persist = CHAR(STRING_ELT(list_elt(item, "persist"), 0));
   if (!strcmp(persist, "session")) {
     cred.Persist = CRED_PERSIST_SESSION;
