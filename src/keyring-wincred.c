@@ -41,6 +41,20 @@ void keyring_wincred_handle_status(const char *func, BOOL status) {
   }
 }
 
+PCREDENTIAL_ATTRIBUTEW from_attributes(SEXP attr, SEXP nms) {
+  DWORD i, cnt = Rf_length(attr);
+  PCREDENTIAL_ATTRIBUTEW ptr = (PCREDENTIAL_ATTRIBUTEW)
+    R_alloc(sizeof(struct _CREDENTIAL_ATTRIBUTEW), cnt);
+  for (i = 0; i < cnt; i++) {
+    ptr[i].Keyword = (wchar_t*) RAW(VECTOR_ELT(nms, i));
+    ptr[i].Flags = 0;
+    ptr[i].ValueSize = Rf_length(VECTOR_ELT(attr, i));
+    ptr[i].Value = RAW(VECTOR_ELT(attr, i));
+  }
+
+  return ptr;
+}
+
 SEXP oskeyring_windows_write(SEXP item, SEXP preserve) {
   const char *type = CHAR(STRING_ELT(list_elt(item, "type"), 0));
   CREDENTIALW cred = { 0 };
@@ -66,7 +80,10 @@ SEXP oskeyring_windows_write(SEXP item, SEXP preserve) {
   } else {
     Rf_error("Invalid persist parameter: `%s`", persist);
   }
-  // TODO: attributes
+  SEXP attributes = list_elt(item, "attributes");
+  SEXP attribute_names = list_elt(item, "attribute_names");
+  cred.AttributeCount = Rf_length(attributes);
+  cred.Attributes = from_attributes(attributes, attribute_names);
   SEXP target_alias = list_elt(item, "target_alias");
   if (!Rf_isNull(target_alias)) {
     cred.TargetAlias = (wchar_t*) RAW(target_alias);
@@ -115,11 +132,36 @@ SEXP as_time(FILETIME wt) {
   return rt;
 }
 
+SEXP as_attributes(PCREDENTIAL_ATTRIBUTEW attr, DWORD cnt) {
+  SEXP ret = PROTECT(Rf_allocVector(VECSXP, cnt));
+  DWORD i;
+
+  for (i = 0; i < cnt; i++) {
+    SET_VECTOR_ELT(ret, i, Rf_allocVector(RAWSXP, attr[i].ValueSize));
+    memcpy(RAW(VECTOR_ELT(ret, i)), attr[i].Value, attr[i].ValueSize);
+  }
+
+  UNPROTECT(1);
+  return ret;
+}
+
+SEXP as_attribute_names(PCREDENTIAL_ATTRIBUTEW attr, DWORD cnt) {
+  SEXP nms = PROTECT(Rf_allocVector(VECSXP, cnt));
+  DWORD i;
+
+  for (i = 0; i < cnt; i++) {
+    SET_VECTOR_ELT(nms, i, as_raw_wcs(attr[i].Keyword));
+  }
+
+  UNPROTECT(1);
+  return nms;
+}
+
 SEXP as_cred(CREDENTIALW *cred) {
   const char *nms[] = {
     "type", "target_name", "credential_blob", "comment", "persist",
-    "attributes", "target_alias", "username", "last_written", "flags",
-    "" };
+    "attributes", "attribute_names", "target_alias", "username",
+    "last_written", "flags", "" };
 
   SEXP ret = PROTECT(Rf_mkNamed(VECSXP, nms));
   switch (cred->Type) {
@@ -156,11 +198,14 @@ SEXP as_cred(CREDENTIALW *cred) {
     default:
       Rf_error("Unknown persistence type: %i", (int) cred->Persist);
   }
-  // TODO: attributes
-  SET_VECTOR_ELT(ret, 6, as_raw_wcs(cred->TargetAlias));
-  SET_VECTOR_ELT(ret, 7, as_raw_wcs(cred->UserName));
-  SET_VECTOR_ELT(ret, 8, as_time(cred->LastWritten));
-  SET_VECTOR_ELT(ret, 9, Rf_ScalarInteger(cred->Flags));
+  SET_VECTOR_ELT(ret, 5,
+                 as_attributes(cred->Attributes, cred->AttributeCount));
+  SET_VECTOR_ELT(ret, 6,
+                 as_attribute_names(cred->Attributes, cred->AttributeCount));
+  SET_VECTOR_ELT(ret, 7, as_raw_wcs(cred->TargetAlias));
+  SET_VECTOR_ELT(ret, 8, as_raw_wcs(cred->UserName));
+  SET_VECTOR_ELT(ret, 9, as_time(cred->LastWritten));
+  SET_VECTOR_ELT(ret, 10, Rf_ScalarInteger(cred->Flags));
 
   Rf_setAttrib(ret, R_ClassSymbol, Rf_mkString("oskeyring_windows_item"));
 

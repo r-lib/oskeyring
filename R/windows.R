@@ -47,7 +47,6 @@ windows_item <- function(credential_blob, target_name,
 #' @export
 
 format.oskeyring_windows_item <- function(x, ...) {
-  # TODO: attributes
   c(
     paste0("<oskeyring_windows_item: ", x$type, ">"),
     paste0(" target_name: ", x$target_name),
@@ -55,6 +54,11 @@ format.oskeyring_windows_item <- function(x, ...) {
     paste0(" persist: ", x$persist),
     if (!is.null(x$target_alias)) paste0(" target_alias: ", x$target_alias),
     if (!is.null(x$username)) paste0(" username: ", x$username),
+    if (!is.null(x$attributes)) {
+      c(" attributes:",
+        paste0("  ", names(x$attributes), ": ", format_attr(x$attributes))
+      )
+    },
     if (!is.null(x$credential_blob)) " credential_blob: <-- hidden -->"
   )
 }
@@ -91,7 +95,7 @@ windows_item_write <- function(item, preserve = FALSE) {
   encode <- function(x, to = item$encoding) {
     if (is.character(x)) {
       iconv(x, to = to, toRaw = TRUE)[[1]]
-    } else if (is.raw(x) || is.null(x)) {
+    } else if (is.raw(x)) {
       x
     } else {
       stop("Unsupported data type in Windows keychain item")
@@ -100,7 +104,8 @@ windows_item_write <- function(item, preserve = FALSE) {
   item$credential_blob <- encode(item$credential_blob)
   item$target_name <- to_ucs2(item$target_name)
   item["comment"] <- list(to_ucs2(item$comment))
-  item["attributes"] <- list(lapply_with_names(item$attributes, encode))
+  item["attribute_names"] <- list(lapply(names(item$attributes), to_ucs2))
+  item["attributes"] <- list(lapply(item$attributes, encode))
   item["target_alias"] <- list(to_ucs2(item$target_alias))
   item["username"] <- list(to_ucs2(item$username))
 
@@ -133,10 +138,20 @@ windows_item_enumerate <- function(filter = NULL, all = FALSE) {
 }
 
 windows_item_from_ucs2 <- function(item) {
-  item$target_name <- from_ucs2(item$target_name)
-  item["comment"] <- list(from_ucs2(item$comment))
-  item["target_alias"] <- list(from_ucs2(item$target_alias))
-  item["username"] <- list(from_ucs2(item$username))
+  item$target_name <- from_ucs2(list(item$target_name))
+  item["comment"] <- list(from_ucs2(list(item$comment)))
+  item["target_alias"] <- list(from_ucs2(list(item$target_alias)))
+  item["username"] <- list(from_ucs2(list(item$username)))
+
+  if (length(item$attributes)) {
+    attr <- item$attributes
+    names(attr) <- from_ucs2(item$attribute_names)
+    item["attributes"] <- list(attr)
+  } else {
+    item["attributes"] <- list(NULL)
+  }
+  item$attribute_names <- NULL
+
   item
 }
 
@@ -150,6 +165,6 @@ to_ucs2 <- function(x) {
 }
 
 from_ucs2 <- function(x) {
-  if (is.null(x)) return(NULL)
-  iconv(list(x), from = "UCS-2LE", to = "UTF-8")
+  if (length(x) == 1 && is.null(x[[1]])) return(NULL)
+  iconv(x, from = "UCS-2LE", to = "UTF-8")
 }
