@@ -5,6 +5,10 @@ is_string <- function(x) {
   is.character(x) && length(x) == 1 && !is.na(x)
 }
 
+is_string_or_raw <- function(x) {
+  is_string(x) || is.raw(x)
+}
+
 is_flag <- function(x) {
   is.logical(x) && length(x) == 1 && !is.na(x)
 }
@@ -39,4 +43,12 @@ get_os <- function() {
   } else {
     "other"
   }
+}
+
+lapply_with_names <- function(X, FUN, ...) {
+  structure(lapply(X, FUN, ...), names = names(X))
+}
+
+last_character <- function(x) {
+  substr(x, nchar(x), nchar(x))
 }

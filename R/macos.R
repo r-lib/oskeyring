@@ -237,7 +237,7 @@ macos_item <- function(value, attributes = list(),
 format_attr <- function(x) {
   type <- vapply(x, typeof, character(1))
   x <- lapply(x, format)
-  x <- ifelse(type != "raw", x, paste0("[raw] ", x))
+  x <- ifelse(type != "raw", x, paste0("[raw] ", format(as.list(x))))
   nc <- nchar(x)
   ifelse(type != "raw" | nc <= 60, x, paste(substr(x, 1, 56), "..."))
 }
