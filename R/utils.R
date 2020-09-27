@@ -1,4 +1,21 @@
 
+utils::globalVariables(c(
+  "oskeyring_macos_add",
+  "oskeyring_macos_delete",
+  "oskeyring_macos_search",
+  "oskeyring_macos_update",
+  "oskeyring_macos_keychain_create",
+  "oskeyring_macos_keychain_delete",
+  "oskeyring_macos_keychain_is_locked",
+  "oskeyring_macos_keychain_list",
+  "oskeyring_macos_keychain_lock",
+  "oskeyring_macos_keychain_unlock",
+  "oskeyring_windows_write",
+  "oskeyring_windows_read",
+  "oskeyring_windows_delete",
+  "oskeyring_windows_enumerate"
+))
+
 `%||%` <- function(l, r) if (is.null(l)) r else l
 
 is_string <- function(x) {
