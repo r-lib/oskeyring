@@ -197,6 +197,7 @@ print.oskeyring_windows_item <- function(x, ...) {
 #' @rdname windows_credentials
 
 windows_item_read <- function(target_name, type = "generic") {
+  os_check("Windows")
   stopifnot(
     is_string(target_name),
     is_string(type) && type %in% windows_item_types()
@@ -218,6 +219,7 @@ windows_item_read <- function(target_name, type = "generic") {
 #' @rdname windows_credentials
 
 windows_item_write <- function(item, preserve = FALSE) {
+  os_check("Windows")
   stopifnot(
     inherits(item, "oskeyring_windows_item"),
     is_flag(preserve)
@@ -248,6 +250,7 @@ windows_item_write <- function(item, preserve = FALSE) {
 #' @rdname windows_credentials
 
 windows_item_delete <- function(target_name, type = "generic") {
+  os_check("Windows")
   stopifnot(
     is_string(target_name),
     is_string(type) && type %in% windows_item_types()
@@ -273,6 +276,7 @@ windows_item_delete <- function(target_name, type = "generic") {
 #' @rdname windows_credentials
 
 windows_item_enumerate <- function(filter = NULL, all = FALSE) {
+  os_check("Windows")
   stopifnot(
     is.null(filter) || is_string(filter),
     is_flag(all)
