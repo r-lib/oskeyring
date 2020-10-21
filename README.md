@@ -8,6 +8,8 @@
 [![](http://www.r-pkg.org/badges/version/oskeyring)](http://www.r-pkg.org/pkg/oskeyring)
 [![CRAN RStudio mirror
 downloads](http://cranlogs.r-pkg.org/badges/oskeyring)](http://www.r-pkg.org/pkg/oskeyring)
+[![R build
+status](https://github.com/r-lib/oskeyring/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/oskeyring/actions)
 
 <!-- badges: end -->
 

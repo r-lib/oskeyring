@@ -8,3 +8,4 @@
 ^src/.*\.o$
 ^src/oskeyring\.so$
 ^src/oskeyring\.dll$
+^\.github$
