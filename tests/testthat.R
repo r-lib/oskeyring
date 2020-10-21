@@ -1,4 +1,4 @@
 library(testthat)
 library(oskeyring)
 
-test_check("oskeyring", reporter = "summary")
+test_check("oskeyring")
