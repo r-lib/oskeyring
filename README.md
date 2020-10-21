@@ -38,11 +38,62 @@ of functions on Windows and macOS. E.g. the macOS API can search for
 KeyChain items based on item attributes, but there is no similar API on
 Windows, so oskeyring does not have a `windows_item_search()` function.
 
-### macOS
+### Windows Credential Store
+
+oskeyring uses the API defined in
+[`wincred.h`](https://docs.microsoft.com/en-us/windows/win32/api/wincred/)
+on Windows. The Windows credential store contains various credential
+types. The ones supported by oskeyring are:
+
+``` r
+windows_item_types()
+```
+
+    #> [1] "generic"                 "domain_password"        
+    #> [3] "domain_certificate"      "domain_visible_password"
+
+`windows_item_write()` adds or updates a credential in the credential
+store. It takes objects created with `windows_item()` :
+
+``` r
+it <- windows_item("secret", "my-host-password")
+it
+```
+
+    #> <oskeyring_windows_item: generic>
+    #>  target_name: my-host-password
+    #>  persist: local_machine
+    #>  credential_blob: <-- hidden -->
+
+``` r
+windows_item_write(it)
+```
+
+`windows_item_read()` reads a credential from the credential store, the
+return value includes the secret as well:
+
+``` r
+windows_item_read("my-host-password")
+```
+
+``` r
+#> <oskeyring_windows_item: generic>
+#>  target_name: my-host-password
+#>  persist: local_machine
+#>  credential_blob: <-- hidden -->
+```
+
+`windows_item_enumerate()` lists all credentials that match a prefix.
+
+`windows_item_delete()` deletes a credential.
+
+See more in the manual: `?windows_credentials`.
+
+### macOS Keychain Services
 
 #### Keychain items
 
-oskeyring uses the [KeyChain
+oskeyring uses the [Keychain
 API](https://developer.apple.com/documentation/security/keychain_services)
 on macOS. macOS keychains can store various classes of items. The item
 classes supported by oskeyring:
@@ -116,10 +167,6 @@ restrict the operation to a specific keychain.
 `macos_keychain_list()` lists all keychains on the search list.
 
 See more about macOS keychains in the manual: `?macos_keychain`.
-
-### Windows Credential Store
-
-TODO
 
 ## License
 
