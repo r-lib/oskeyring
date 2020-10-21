@@ -11,7 +11,20 @@ downloads](http://cranlogs.r-pkg.org/badges/oskeyring)](http://www.r-pkg.org/pkg
 
 <!-- badges: end -->
 
-Raw System Credential Store Access from R
+## Features
+
+  - Windows and macOS supports. Read, write, list and search the system
+    credential.
+  - Generic credentials, domain passwords, domain certificates on
+    Windows.
+  - Generic passwords and internet passwords on macOS.
+  - Multiple keychains on macOS.
+
+## Related
+
+  - The keyring R package provides a portable system keyring API for all
+    platforms, including multiple backend:
+    <https://github.com/r-lib/keyring>
 
 ## Installation
 
