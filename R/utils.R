@@ -46,7 +46,15 @@ os_check <- function(which = c("macOS", "Windows", "Linux")) {
   which <- match.arg(which)
   os <- get_os()
   if (os != tolower(which)) {
-    stop("Unsupported OS. This function only works on ", which, ".")
+    err <- structure(
+      list(message = paste0(
+        "Unsupported OS. This function only works on ",
+        which,
+        "."
+      )),
+      class = c("oxkeyring_bad_os_error", "error", "condition")
+    )
+    stop(err)
   }
 }
 
