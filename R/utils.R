@@ -50,7 +50,7 @@ os_check <- function(which = c("macOS", "Windows", "Linux")) {
         which,
         "."
       )),
-      class = c("oxkeyring_bad_os_error", "error", "condition")
+      class = c("oskeyring_bad_os_error", "error", "condition")
     )
     stop(err)
   }
