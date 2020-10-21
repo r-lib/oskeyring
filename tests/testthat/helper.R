@@ -37,3 +37,14 @@ test_cleanup_macos <- function() {
     }, error = function(err) print(err))
   }
 }
+
+test_cleanup_windows <- function() {
+  if (is_ci() && tolower(get_os()) == "windows") {
+    tryCatch({
+      its <- windows_item_enumerate("oskeyring-test-*")
+      for (it in its) {
+        try(windows_item_delete(it$target_name, it$type))
+      }
+    }, error = function(err) print(err))
+  }
+}
