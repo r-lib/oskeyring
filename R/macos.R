@@ -586,8 +586,8 @@ item_list <- function(x) {
 
 is_macos_attributes <- function(attr, class) {
   if (!is_named_list(attr)) return(FALSE)
-  attr <- macos_item_attr()[[class]]
-  bad <- setdiff(names(attributes), names(attr))
+  good <- macos_item_attr()[[class]]
+  bad <- setdiff(names(attr), names(good))
   if (length(bad)) {
     stop("Unknown attributes for `", class, "`:",
          paste0("`", bad, "`", collapse = ", "))
