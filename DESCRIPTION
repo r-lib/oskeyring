@@ -9,8 +9,8 @@ Description: Aims to support all features of the OS credential store,
     See the keyring package if you need a portable API.
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/gaborcsardi/oskeyring#readme
-BugReports: https://github.com/gaborcsardi/oskeyring/issues
+URL: https://github.com/r-lib/oskeyring#readme
+BugReports: https://github.com/r-lib/oskeyring/issues
 RoxygenNote: 7.1.1
 Suggests:
     askpass,
