@@ -190,6 +190,9 @@
 #' ## 3        TRUE        FALSE
 #' ```
 #'
+#' @return `macos_item_classes()` returns a character vector, the
+#' names of the supported keychain item classes.
+#'
 #' @seealso The Keychain Services API documentation at
 #' <https://developer.apple.com/documentation/security/keychain_services>.
 #' @export
@@ -214,6 +217,8 @@ macos_item_classes <- function() {
 #' UTF-8.
 #' @param attributes Item class dependent attributes in a named list.
 #' See possible entries below
+#' @return `macos_item()` returns a new `oskeyring_macos_item`
+#' object.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -263,6 +268,7 @@ print.oskeyring_macos_item <- function(x, ...) {
 #' by oskeyking itself.
 #' @param keychain Select an alternative keychain, instead of the default.
 #' Not implemented yet.
+#' @return `macos_item_add()` returns `NULL`, invisibly.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -290,6 +296,7 @@ macos_item_add <- function(item, keychain = NULL) {
 #' If this is `TRUE`, then macOS will prompt you for passwords if necessary.
 #' You might get multiple password prompts, if you set `limit` to a larger
 #' than one value.
+#' @param `macos_item_search()` returns a list of keychain items.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -310,6 +317,7 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
 }
 
 #' @param update Named list specifying the new values of attributes.
+#' @return `macos_item_update()` returns `NULL`, invisibly.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -330,6 +338,7 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
   )
 }
 
+#' @return `macos_item_delete()` returns `NULL`, invisibly.
 #' @export
 #' @rdname macos_keychain
 
@@ -363,6 +372,8 @@ macos_item_delete <- function(class = "generic_password", attributes = list(),
 #' @param password Password to unlock the keychain, or new password to
 #' set when creating a new keychain. May be `NULL` in interactive
 #' sessions, to force a secure password dialog.
+#' @return `macos_keychain_create()` returns `NULL`, invisibly.
+#'
 #' @rdname macos_keychain
 
 macos_keychain_create <- function(keychain, password = NULL) {
@@ -385,6 +396,11 @@ macos_keychain_create <- function(keychain, password = NULL) {
 #' * `"common"`: keychains common to everyone,
 #' * `"dynamic"`: dynamic search list (typically provided by removable
 #' keychains such as smart cards).
+#' @return `macos_keychain_list()` returns a data frame with columns:
+#' * `path`: Path to the file of the keychain.
+#' * `is_locked`: Whether the keychain is locked.
+#' * `is_readable`: Whether the keychain is readable by the user.
+#' * `is_writeable`: Whether the keychain is writeable by the user.
 #'
 #' @export
 #' @rdname macos_keychain
@@ -403,6 +419,7 @@ macos_keychain_list <- function(domain = c("all", "user", "system",
   )
 }
 
+#' @return `macos_keychain_delete()` returns `NULL`, invisibly.
 #' @export
 #' @rdname macos_keychain
 
@@ -421,6 +438,7 @@ macos_keychain_delete <- function(keychain) {
   invisible(call_with_cleanup(oskeyring_macos_keychain_delete, file))
 }
 
+#' @return `macos_keychain_lock()` returns `NULL`, invisibly.
 #' @export
 #' @rdname macos_keychain
 
@@ -433,6 +451,7 @@ macos_keychain_lock <- function(keychain = NULL) {
   invisible(call_with_cleanup(oskeyring_macos_keychain_lock, file))
 }
 
+#' @return `macos_keychain_unlock()` returns `NULL`, invisibly.
 #' @export
 #' @rdname macos_keychain
 
@@ -448,6 +467,7 @@ macos_keychain_unlock <- function(keychain = NULL, password = NULL) {
   invisible(call_with_cleanup(oskeyring_macos_keychain_unlock, file, password))
 }
 
+#' @return `macos_keychain_is_locked()` returns `TRUE` or `FALSE`.
 #' @export
 #' @rdname macos_keychain
 
@@ -460,6 +480,9 @@ macos_keychain_is_locked <- function(keychain = NULL) {
   call_with_cleanup(oskeyring_macos_keychain_is_locked, file)
 }
 
+#' @return `macos_item_attr()` returns a list of lists of character
+#' scalars, the description of keychain item attributes, for each
+#' keychain item class.
 #' @export
 #' @rdname macos_keychain
 
@@ -540,6 +563,8 @@ macos_item_attr <- function() {
   )
 }
 
+#' @return `macos_item_match_options()` returns a list of character
+#' scalars, the description of the supported match options.
 #' @export
 #' @rdname macos_keychain
 

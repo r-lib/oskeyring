@@ -107,6 +107,46 @@ the keychain search list:
 \item \code{"dynamic"}: dynamic search list (typically provided by removable
 keychains such as smart cards).
 }}
+
+\item{`macos_item_search()`}{returns a list of keychain items.}
+}
+\value{
+\code{macos_item_classes()} returns a character vector, the
+names of the supported keychain item classes.
+
+\code{macos_item()} returns a new \code{oskeyring_macos_item}
+object.
+
+\code{macos_item_add()} returns \code{NULL}, invisibly.
+
+\code{macos_item_update()} returns \code{NULL}, invisibly.
+
+\code{macos_item_delete()} returns \code{NULL}, invisibly.
+
+\code{macos_keychain_create()} returns \code{NULL}, invisibly.
+
+\code{macos_keychain_list()} returns a data frame with columns:
+\itemize{
+\item \code{path}: Path to the file of the keychain.
+\item \code{is_locked}: Whether the keychain is locked.
+\item \code{is_readable}: Whether the keychain is readable by the user.
+\item \code{is_writeable}: Whether the keychain is writeable by the user.
+}
+
+\code{macos_keychain_delete()} returns \code{NULL}, invisibly.
+
+\code{macos_keychain_lock()} returns \code{NULL}, invisibly.
+
+\code{macos_keychain_unlock()} returns \code{NULL}, invisibly.
+
+\code{macos_keychain_is_locked()} returns \code{TRUE} or \code{FALSE}.
+
+\code{macos_item_attr()} returns a list of lists of character
+scalars, the description of keychain item attributes, for each
+keychain item class.
+
+\code{macos_item_match_options()} returns a list of character
+scalars, the description of the supported match options.
 }
 \description{
 \verb{macos_item_*} functions add, delete, update and search Keychain items.
