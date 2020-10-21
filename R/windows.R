@@ -29,7 +29,7 @@
 #'
 #' Writes an item to the credential store.
 #'
-#' ```{r, include = FALSE, eval = get_os() == "win"}
+#' ```{r, include = FALSE, eval = get_os() == "windows"}
 #' # Remove to make sure it is not there
 #' tryCatch(
 #'   windows_item_delete("my-host-password"),
@@ -37,7 +37,7 @@
 #' )
 #' ```
 #'
-#' ```{r, eval = get_os() == "win"}
+#' ```{r, eval = get_os() == "windows"}
 #' windows_item_write(it)
 #' ```
 #'
@@ -45,7 +45,7 @@
 #'
 #' Reads a credential with the specified type and `target_name`.
 #'
-#' ```{r, eval = get_os() == "win"}
+#' ```{r, eval = get_os() == "windows"}
 #' windows_item_read("my-host-password")
 #' ```
 #'
@@ -53,7 +53,7 @@
 #'
 #' List all credentials that match a prefix.
 #'
-#' ```{r, eval = get_os() == "win"}
+#' ```{r, eval = get_os() == "windows"}
 #' windows_item_enumerate(filter = "my-*")
 #' ```
 #'
@@ -61,7 +61,7 @@
 #'
 #' Delete a credential:
 #'
-#' ```{r, eval = get_os() == "win"}
+#' ```{r, eval = get_os() == "windows"}
 #' windows_item_delete("my-host-password")
 #' windows_item_enumerate(filter = "my-*")
 #' ```

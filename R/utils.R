@@ -60,7 +60,7 @@ os_check <- function(which = c("macOS", "Windows", "Linux")) {
 
 get_os <- function() {
   if (.Platform$OS.type == "windows") {
-    "win"
+    "windows"
   } else if (Sys.info()["sysname"] == "Darwin") {
     "macos"
   } else if (Sys.info()[["sysname"]] == "Linux") {
