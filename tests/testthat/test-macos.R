@@ -1,5 +1,9 @@
 
-withr::defer(test_cleanup_macos(), teardown_env())
+if (packageVersion("testthat") <= "2.5.0") {
+  testthat::teardown(test_cleanup_macos())
+} else {
+  withr::defer(test_cleanup_macos(), teardown_env())
+}
 
 test_that("macos_item_classes", {
   expect_true(is.character(macos_item_classes()))
