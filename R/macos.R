@@ -605,10 +605,3 @@ is_macos_match <- function(x) {
   }
   TRUE
 }
-
-darwin_version <- function() {
-  info <- Sys.info()
-  if (info[["sysname"]] != "Darwin")
-    stop("Not macOS")
-  package_version(info[["release"]])
-}
