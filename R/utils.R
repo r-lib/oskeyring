@@ -36,11 +36,13 @@ is_named_list <- function(x) {
     !any(nms == "")
 }
 
+# nocov start
 ask_pass <- function(prompt = "Password: ") {
   res <- askpass::askpass(prompt)
   res <- res %||% askpass::askpass(prompt)
   enc2utf8(res)
 }
+# nocov end
 
 os_check <- function(which = c("macOS", "Windows", "Linux")) {
   which <- match.arg(which)
