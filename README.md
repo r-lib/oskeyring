@@ -15,8 +15,8 @@ status](https://github.com/r-lib/oskeyring/workflows/R-CMD-check/badge.svg)](htt
 
 ## Features
 
-  - Windows and macOS supports. Read, write, list and search the system
-    credential.
+  - Windows and macOS support. Read, write, list and search the system
+    credential store.
   - Generic credentials, domain passwords, domain certificates on
     Windows.
   - Generic passwords and internet passwords on macOS.
@@ -25,7 +25,7 @@ status](https://github.com/r-lib/oskeyring/workflows/R-CMD-check/badge.svg)](htt
 ## Related
 
   - The keyring R package provides a portable system keyring API for all
-    platforms, including multiple backend:
+    platforms, and also supports multiple backends:
     <https://github.com/r-lib/keyring>
 
 ## Installation
@@ -42,15 +42,15 @@ install.packages("oskeyring")
 library(oskeyring)
 ```
 
-Most oskeyring functions are not portable, on only work on one operating
+Most oskeyring functions are not portable, and only work on one operating
 system (OS). The functions that do not use the system credential store
 can be used on all OSes. E.g. `macos_item()` and `windows_item()` are
-portable. Calling a function on the wrong OS will throw a
-`oxkeyring_bad_os_error` error.
+portable. Calling a function on the wrong OS will throw an
+`oskeyring_bad_os_error` error.
 
 oskeyring follows the API of the OS closely, and it has a different set
 of functions on Windows and macOS. E.g. the macOS API can search for
-KeyChain items based on item attributes, but there is no similar API on
+keychain items based on item attributes, but there is no similar API on
 Windows, so oskeyring does not have a `windows_item_search()` function.
 
 ### Windows Credential Store
@@ -111,7 +111,7 @@ See more in the manual: `?windows_credentials`.
 oskeyring uses the [Keychain
 API](https://developer.apple.com/documentation/security/keychain_services)
 on macOS. macOS keychains can store various classes of items. The item
-classes supported by oskeyring:
+classes supported by oskeyring are:
 
 ``` r
 macos_item_classes()
