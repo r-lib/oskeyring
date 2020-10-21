@@ -17,6 +17,10 @@ void keyring_wincred_dummy() { }
 
 #include <string.h>
 
+void oskeyring_cred_free(void *buffer) {
+  CredFree(buffer);
+}
+
 void keyring_wincred_handle_status(const char *func, BOOL status) {
   if (status == FALSE) {
     DWORD errorcode = GetLastError();
@@ -235,7 +239,7 @@ SEXP oskeyring_windows_read(SEXP target_name, SEXP type) {
   DWORD wtype = from_type(type);
   BOOL status = CredReadW((wchar_t*) RAW(target_name), wtype, 0, &cred);
   keyring_wincred_handle_status("read", status);
-  r_call_on_exit((finalizer_t) CredFree, (void*) cred);
+  r_call_on_exit((finalizer_t) oskeyring_cred_free, (void*) cred);
 
   return as_cred(cred);
 }
@@ -265,7 +269,7 @@ SEXP oskeyring_windows_enumerate(SEXP filter, SEXP all) {
     return Rf_allocVector(VECSXP, 0);
   }
 
-  r_call_on_exit((finalizer_t) CredFree, (void*) creds);
+  r_call_on_exit((finalizer_t) oskeyring_cred_free, (void*) *creds);
 
   size_t i, num = (size_t) count;
   SEXP result = PROTECT(Rf_allocVector(VECSXP, num));
