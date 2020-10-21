@@ -5,7 +5,6 @@
 
 <!-- badges: start -->
 
-[![](https://www.r-pkg.org/badges/version/oskeyring)](https://www.r-pkg.org/pkg/oskeyring)
 [![CRAN RStudio mirror
 downloads](https://cranlogs.r-pkg.org/badges/oskeyring)](https://www.r-pkg.org/pkg/oskeyring)
 [![R build
