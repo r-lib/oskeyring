@@ -234,7 +234,7 @@ windows_item_write <- function(item, preserve = FALSE) {
       stop("Unsupported data type in Windows keychain item")
     }
   }
-  item$credential_blob <- encode(item$credential_blob)
+  item["credential_blob"] <- list(encode(item$credential_blob))
   item$target_name <- to_ucs2(item$target_name)
   item["comment"] <- list(to_ucs2(item$comment))
   item["attribute_names"] <- list(lapply(names(item$attributes), to_ucs2))
