@@ -1,8 +1,8 @@
 
 if (packageVersion("testthat") <= "2.5.0") {
-  testthat::teardown(test_cleanup_windows())
+  # testthat::teardown(test_cleanup_windows())
 } else {
-  withr::defer(test_cleanup_windows(), teardown_env())
+  # withr::defer(test_cleanup_windows(), teardown_env())
 }
 
 test_that("windows_item_types", {
