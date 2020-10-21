@@ -296,7 +296,7 @@ macos_item_add <- function(item, keychain = NULL) {
 #' If this is `TRUE`, then macOS will prompt you for passwords if necessary.
 #' You might get multiple password prompts, if you set `limit` to a larger
 #' than one value.
-#' @param `macos_item_search()` returns a list of keychain items.
+#' @return `macos_item_search()` returns a list of keychain items.
 #'
 #' @export
 #' @rdname macos_keychain

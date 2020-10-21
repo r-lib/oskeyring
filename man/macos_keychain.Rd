@@ -107,8 +107,6 @@ the keychain search list:
 \item \code{"dynamic"}: dynamic search list (typically provided by removable
 keychains such as smart cards).
 }}
-
-\item{`macos_item_search()`}{returns a list of keychain items.}
 }
 \value{
 \code{macos_item_classes()} returns a character vector, the
@@ -118,6 +116,8 @@ names of the supported keychain item classes.
 object.
 
 \code{macos_item_add()} returns \code{NULL}, invisibly.
+
+\code{macos_item_search()} returns a list of keychain items.
 
 \code{macos_item_update()} returns \code{NULL}, invisibly.
 
