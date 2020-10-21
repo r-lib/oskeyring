@@ -243,7 +243,7 @@ Keychains may belong into four non-exclusive categories, see the
 A keychain is stored in an encrypted file on the disk, see the first
 column of the output of \code{macos_keychain_list()}.
 
-\verb{macos_item_*()} functions have a \code{keychain} attribute to direct or
+\verb{macos_item_*()} functions have a \code{keychain} argument to direct or
 restrict the operation to a single keychain only. These are the defaults:
 \itemize{
 \item \code{macos_item_add()} adds the item to the default keychain.

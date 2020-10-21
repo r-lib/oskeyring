@@ -114,7 +114,7 @@
 #' A keychain is stored in an encrypted file on the disk, see the first
 #' column of the output of `macos_keychain_list()`.
 #'
-#' `macos_item_*()` functions have a `keychain` attribute to direct or
+#' `macos_item_*()` functions have a `keychain` argument to direct or
 #' restrict the operation to a single keychain only. These are the defaults:
 #' * `macos_item_add()` adds the item to the default keychain.
 #' * `macos_item_search()` searches all keychains in the search list.
