@@ -600,7 +600,7 @@ is_macos_match <- function(x) {
   mtch <- macos_item_match_options()
   bad <- setdiff(names(x), names(mtch))
   if (length(bad)) {
-    stop("Unknown attributes for `", class, "`:",
+    stop("Unknown match parameters :",
          paste0("`", bad, "`", collapse = ", "))
   }
   TRUE
