@@ -16,8 +16,6 @@ utils::globalVariables(c(
   "oskeyring_windows_enumerate"
 ))
 
-`%||%` <- function(l, r) if (is.null(l)) r else l
-
 is_string <- function(x) {
   is.character(x) && length(x) == 1 && !is.na(x)
 }
@@ -68,12 +66,4 @@ get_os <- function() {
   } else {
     "other"
   }
-}
-
-lapply_with_names <- function(X, FUN, ...) {
-  structure(lapply(X, FUN, ...), names = names(X))
-}
-
-last_character <- function(x) {
-  substr(x, nchar(x), nchar(x))
 }
