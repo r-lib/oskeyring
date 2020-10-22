@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![CRAN RStudio mirror
-downloads](https://cranlogs.r-pkg.org/badges/oskeyring)](https://www.r-pkg.org/pkg/oskeyring)
 [![R build
 status](https://github.com/r-lib/oskeyring/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/oskeyring/actions)
 
