@@ -1,5 +1,5 @@
 #! /bin/sh
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [ "`uname`" = "Darwin" ]; then
     echo "PKG_LIBS=-framework Security" > src/Makevars
 fi
