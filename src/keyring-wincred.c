@@ -269,7 +269,12 @@ SEXP oskeyring_windows_enumerate(SEXP filter, SEXP all) {
     return Rf_allocVector(VECSXP, 0);
   }
 
-  r_call_on_exit((finalizer_t) oskeyring_cred_free, (void*) *creds);
+  if (status == FALSE) {
+    keyring_wincred_handle_status("enumerate", status);
+    return R_NilValue;
+  }
+
+  r_call_on_exit((finalizer_t) oskeyring_cred_free, creds);
 
   size_t i, num = (size_t) count;
   SEXP result = PROTECT(Rf_allocVector(VECSXP, num));
