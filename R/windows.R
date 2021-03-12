@@ -203,10 +203,10 @@ windows_item_read <- function(target_name, type = "generic") {
     is_string(type) && type %in% windows_item_types()
   )
 
-  target_name <- to_ucs2(target_name)
+  target_name <- to_utf16(target_name)
   item <- call_with_cleanup(oskeyring_windows_read, target_name, type)
 
-  windows_item_from_ucs2(item)
+  windows_item_from_utf16(item)
 }
 
 #' @param item `oskeyring_windows_item` object to write.
@@ -227,7 +227,7 @@ windows_item_write <- function(item, preserve = FALSE) {
 
   encode <- function(x) {
     if (is.character(x)) {
-      iconv(x, to = "UCS-2LE", toRaw = TRUE)[[1]]
+      iconv(x, to = "UTF-16LE", toRaw = TRUE)[[1]]
     } else if (is.null(x) || is.raw(x)) {
       x
     } else {
@@ -235,12 +235,12 @@ windows_item_write <- function(item, preserve = FALSE) {
     }
   }
   item["credential_blob"] <- list(encode(item$credential_blob))
-  item$target_name <- to_ucs2(item$target_name)
-  item["comment"] <- list(to_ucs2(item$comment))
-  item["attribute_names"] <- list(lapply(names(item$attributes), to_ucs2))
+  item$target_name <- to_utf16(item$target_name)
+  item["comment"] <- list(to_utf16(item$comment))
+  item["attribute_names"] <- list(lapply(names(item$attributes), to_utf16))
   item["attributes"] <- list(lapply(item$attributes, encode))
-  item["target_alias"] <- list(to_ucs2(item$target_alias))
-  item["username"] <- list(to_ucs2(item$username))
+  item["target_alias"] <- list(to_utf16(item$target_alias))
+  item["username"] <- list(to_utf16(item$username))
 
   invisible(call_with_cleanup(oskeyring_windows_write, item, preserve))
 }
@@ -256,7 +256,7 @@ windows_item_delete <- function(target_name, type = "generic") {
     is_string(type) && type %in% windows_item_types()
   )
 
-  target_name <- to_ucs2(target_name)
+  target_name <- to_utf16(target_name)
   invisible(call_with_cleanup(oskeyring_windows_delete, target_name, type))
 }
 
@@ -282,20 +282,20 @@ windows_item_enumerate <- function(filter = NULL, all = FALSE) {
     is_flag(all)
   )
 
-  if (!is.null(filter)) filter <- to_ucs2(filter)
+  if (!is.null(filter)) filter <- to_utf16(filter)
   items <- call_with_cleanup(oskeyring_windows_enumerate, filter, all)
-  lapply(items, windows_item_from_ucs2)
+  lapply(items, windows_item_from_utf16)
 }
 
-windows_item_from_ucs2 <- function(item) {
-  item$target_name <- from_ucs2(list(item$target_name))
-  item["comment"] <- list(from_ucs2(list(item$comment)))
-  item["target_alias"] <- list(from_ucs2(list(item$target_alias)))
-  item["username"] <- list(from_ucs2(list(item$username)))
+windows_item_from_utf16 <- function(item) {
+  item$target_name <- from_utf16(list(item$target_name))
+  item["comment"] <- list(from_utf16(list(item$comment)))
+  item["target_alias"] <- list(from_utf16(list(item$target_alias)))
+  item["username"] <- list(from_utf16(list(item$username)))
 
   if (length(item$attributes)) {
     attr <- item$attributes
-    names(attr) <- from_ucs2(item$attribute_names)
+    names(attr) <- from_utf16(item$attribute_names)
     item["attributes"] <- list(attr)
   } else {
     item["attributes"] <- list(NULL)
@@ -305,16 +305,16 @@ windows_item_from_ucs2 <- function(item) {
   item
 }
 
-to_ucs2 <- function(x) {
+to_utf16 <- function(x) {
   if (is.null(x)) return(NULL)
   stopifnot(is_string(x))
   c(
-    iconv(enc2utf8(x), from = "UTF-8", to = "UCS-2LE", toRaw = TRUE)[[1]],
+    iconv(enc2utf8(x), from = "UTF-8", to = "UTF-16LE", toRaw = TRUE)[[1]],
     raw(2)
   )
 }
 
-from_ucs2 <- function(x) {
+from_utf16 <- function(x) {
   if (length(x) == 1 && is.null(x[[1]])) return(NULL)
-  iconv(x, from = "UCS-2LE", to = "UTF-8")
+  iconv(x, from = "UTF-16LE", to = "UTF-8")
 }

@@ -41,7 +41,7 @@ osk_test_that("windows", "windows_item_write", {
   eit <- windows_item_read(target)
   expect_s3_class(eit, "oskeyring_windows_item")
   expect_equal(
-    iconv(list(eit$credential_blob), "UCS-2LE", "UTF-8"),
+    iconv(list(eit$credential_blob), "UTF-16LE", "UTF-8"),
     "secret!"
   )
 
