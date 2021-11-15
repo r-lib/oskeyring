@@ -490,7 +490,10 @@ SEXP oskeyring_as_item_list(CFArrayRef arr) {
 
 SecKeychainRef oskeyring_macos_open_keychain(const char *pathName, int fin) {
   SecKeychainRef keychain;
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   OSStatus status = SecKeychainOpen(pathName, &keychain);
+# pragma GCC diagnostic pop
   oskeyring_macos_handle_status("cannot open keychain", status);
   if (fin) r_call_on_exit((finalizer_t) CFRelease, (void*) keychain);
 
@@ -651,12 +654,15 @@ SEXP oskeyring_macos_keychain_create(SEXP keyring, SEXP password) {
 
   SecKeychainRef result = NULL;
 
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   OSStatus status = SecKeychainCreate(
     ckeyring,
     /* passwordLength = */ (UInt32) strlen(cpassword),
     (const void*) cpassword,
     /* promptUser = */ 0, /* initialAccess = */ NULL,
     &result);
+# pragma GCC diagnostic pop
 
   oskeyring_macos_handle_status("cannot create keychain", status);
 
@@ -666,7 +672,10 @@ SEXP oskeyring_macos_keychain_create(SEXP keyring, SEXP password) {
     &keyrings);
 
   if (status) {
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     SecKeychainDelete(result);
+# pragma GCC diagnostic pop
     if (result != NULL) CFRelease(result);
     oskeyring_macos_handle_status("cannot create keychain", status);
   }
@@ -686,7 +695,10 @@ SEXP oskeyring_macos_keychain_create(SEXP keyring, SEXP password) {
     newkeyrings);
 
   if (status) {
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     SecKeychainDelete(result);
+# pragma GCC diagnostic pop
     if (result) CFRelease(result);
     if (keyrings) CFRelease(keyrings);
     if (newkeyrings) CFRelease(newkeyrings);
@@ -737,7 +749,10 @@ SEXP oskeyring_macos_keychain_list(SEXP domain) {
     SecKeychainRef chain = (SecKeychainRef) CFArrayGetValueAtIndex(chains, i);
     UInt32 pathLength = MAXPATHLEN;
     char pathName[MAXPATHLEN + 1];
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     status = SecKeychainGetPath(chain, &pathLength, pathName);
+# pragma GCC diagnostic pop
     oskeyring_macos_handle_status("Cannot get keychain path", status);
     pathName[pathLength] = '\0';
     SET_STRING_ELT(
@@ -775,7 +790,10 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
       (SecKeychainRef) CFArrayGetValueAtIndex(keyrings, i);
     UInt32 pathLength = MAXPATHLEN;
     char pathName[MAXPATHLEN + 1];
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     status = SecKeychainGetPath(item, &pathLength, pathName);
+# pragma GCC diagnostic pop
     pathName[pathLength] = '\0';
     if (status) {
       CFRelease(keyrings);
@@ -803,7 +821,10 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
 
   /* And now remove the file as well... */
   SecKeychainRef keychain = oskeyring_macos_open_keychain(ckeyring, 1);
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   status = SecKeychainDelete(keychain);
+# pragma GCC diagnostic pop
   oskeyring_macos_handle_status("cannot delete keyring", status);
 
   return R_NilValue;
@@ -813,7 +834,10 @@ SEXP oskeyring_macos_keychain_lock(SEXP keyring) {
   SecKeychainRef keychain =
     Rf_isNull(keyring) ? NULL :
     oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)), 1);
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   OSStatus status = SecKeychainLock(keychain);
+# pragma GCC diagnostic pop
   oskeyring_macos_handle_status("cannot lock keychain", status);
   return R_NilValue;
 }
@@ -823,11 +847,14 @@ SEXP oskeyring_macos_keychain_unlock(SEXP keyring, SEXP password) {
   SecKeychainRef keychain =
     Rf_isNull(keyring) ? NULL :
     oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)), 1);
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   OSStatus status = SecKeychainUnlock(
     keychain,
     (UInt32) strlen(cpassword),
      (const void*) cpassword,
     /* usePassword = */ TRUE);
+# pragma GCC diagnostic pop
 
   oskeyring_macos_handle_status("cannot unlock keychain", status);
   return R_NilValue;
