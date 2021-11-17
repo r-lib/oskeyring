@@ -1,5 +1,5 @@
 
-# development version
+# 0.1.2
 
 * Windows functions now use UTF-16 (little endian) encoding instead
   of UCS-2. UTF-16 should be the default on all reasonably recent
