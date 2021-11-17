@@ -161,12 +161,12 @@ keychains.
 }
 \section{Keychain items}{
 \code{macos_item_classes()} returns the currently supported Keychain item
-classes.\if{html}{\out{<div class="r">}}\preformatted{macos_item_classes()
+classes.\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_item_classes()
 }\if{html}{\out{</div>}}\preformatted{## [1] "generic_password"  "internet_password"
 }
 
 \code{macos_item()} creates a new Keychain item. See the next section about
-the attributes that are supported for the various item types.\if{html}{\out{<div class="r">}}\preformatted{it <- macos_item("secret", list(service = "My service", account = "Gabor"))
+the attributes that are supported for the various item types.\if{html}{\out{<div class="sourceCode r">}}\preformatted{it <- macos_item("secret", list(service = "My service", account = "Gabor"))
 it
 }\if{html}{\out{</div>}}\preformatted{## <oskeyring_macos_item: generic_password>
 ##  account: Gabor
@@ -175,23 +175,23 @@ it
 }
 
 \code{macos_item_add()} adds an item to the keychain. If there is already an
-item with the same primary keys, then it will error.\if{html}{\out{<div class="r">}}\preformatted{macos_item_add(it)
+item with the same primary keys, then it will error.\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_item_add(it)
 }\if{html}{\out{</div>}}
 
 \code{macos_item_search()} searches for Keychain items. If \code{return_data} is
 \code{TRUE} then it also returns the secret data. Returning the secret data
 might create a password entry dialog. If \code{return_data} is \code{TRUE} then
-you need to set the \code{limit} match condition to a (small) finite number.\if{html}{\out{<div class="r">}}\preformatted{macos_item_search(attributes = list(service = "My service"))
+you need to set the \code{limit} match condition to a (small) finite number.\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_item_search(attributes = list(service = "My service"))
 }\if{html}{\out{</div>}}\preformatted{## [[1]]
 ## <oskeyring_macos_item: generic_password>
 ##  account: Gabor
-##  creation_date: 2020-09-23 09:58:29
+##  creation_date: 2021-11-17 15:48:52
 ##  label: My service
-##  modification_date: 2020-09-23 09:58:29
+##  modification_date: 2021-11-17 15:48:52
 ##  service: My service
 }
 
-\code{macos_item_update()} updates existing Keychain items.\if{html}{\out{<div class="r">}}\preformatted{macos_item_update(
+\code{macos_item_update()} updates existing Keychain items.\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_item_update(
   attributes = list(service = "My service", account = "Gabor"),
   update = list(account = "Gabor Csardi")
 )
@@ -199,14 +199,14 @@ macos_item_search(attributes = list(service = "My service"))
 }\if{html}{\out{</div>}}\preformatted{## [[1]]
 ## <oskeyring_macos_item: generic_password>
 ##  account: Gabor Csardi
-##  creation_date: 2020-09-23 09:58:29
+##  creation_date: 2021-11-17 15:48:52
 ##  label: My service
-##  modification_date: 2020-09-23 09:58:29
+##  modification_date: 2021-11-17 15:48:52
 ##  service: My service
 }
 
 \code{macos_item_delete()} deletes one or more Keychain items. Note that
-all matching items will be deleted.\if{html}{\out{<div class="r">}}\preformatted{macos_item_delete(attributes = list(service = "My service"))
+all matching items will be deleted.\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_item_delete(attributes = list(service = "My service"))
 macos_item_search(attributes = list(service = "My service"))
 }\if{html}{\out{</div>}}\preformatted{## list()
 }
@@ -296,10 +296,10 @@ search list.
 
 \code{macos_keychain_create()} creates a new keychain.
 
-\code{macos_keychain_list()} lists all keychains on the search list.\if{html}{\out{<div class="r">}}\preformatted{new <- "~/Library/Keychains/test.keychain-db"
+\code{macos_keychain_list()} lists all keychains on the search list.\if{html}{\out{<div class="sourceCode r">}}\preformatted{new <- "~/Library/Keychains/test.keychain-db"
 macos_keychain_create(new, password = "secret")
 macos_keychain_list()
-}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{##                                                     path is_unlocked
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="sourceCode r">}}\preformatted{##                                                     path is_unlocked
 ## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE
 ## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE
 ## 3  /Users/gaborcsardi/Library/Keychains/test.keychain-db        TRUE
@@ -313,21 +313,21 @@ macos_keychain_list()
 
 \code{macos_keychain_lock()} locks a keychain.
 \code{macos_keychain_unlock()} unlocks a keychain.
-\code{macos_keychain_is_locked()} checks if a keychain is locked.\if{html}{\out{<div class="r">}}\preformatted{macos_keychain_lock(new)
+\code{macos_keychain_is_locked()} checks if a keychain is locked.\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_keychain_lock(new)
 macos_keychain_is_locked(new)
-}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## [1] TRUE
-}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{macos_keychain_unlock(new, password = "secret")
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="sourceCode r">}}\preformatted{## [1] TRUE
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_keychain_unlock(new, password = "secret")
 macos_keychain_is_locked(new)
-}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{## [1] FALSE
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="sourceCode r">}}\preformatted{## [1] FALSE
 }\if{html}{\out{</div>}}
 
 \code{macos_keychain_delete()} deletes a keychain: it removes it from the
 search list and deletes the data from the disk. It currently refuses to
 delete the user's login keychain and the system keychain. Use Keychain
 Access instead if you want to delete these. (Only do this if you are
-aware of the bad consequences.)\if{html}{\out{<div class="r">}}\preformatted{macos_keychain_delete(new)
+aware of the bad consequences.)\if{html}{\out{<div class="sourceCode r">}}\preformatted{macos_keychain_delete(new)
 macos_keychain_list()
-}\if{html}{\out{</div>}}\if{html}{\out{<div class="r">}}\preformatted{##                                                     path is_unlocked
+}\if{html}{\out{</div>}}\if{html}{\out{<div class="sourceCode r">}}\preformatted{##                                                     path is_unlocked
 ## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE
 ## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE
 ## 3                     /Library/Keychains/System.keychain       FALSE
