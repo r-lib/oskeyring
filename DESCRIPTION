@@ -8,7 +8,6 @@ Description: Aims to support all features of the system credential store,
     and 'Credential Manager' on 'Windows'. See the 'keyring' package if you
     need a portable 'API'.
 License: MIT + file LICENSE
-LazyData: true
 URL: https://github.com/r-lib/oskeyring#readme
 BugReports: https://github.com/r-lib/oskeyring/issues
 RoxygenNote: 7.1.1
