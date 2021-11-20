@@ -1,4 +1,6 @@
 
+# development version
+
 # 0.1.2
 
 * Windows functions now use UTF-16 (little endian) encoding instead
