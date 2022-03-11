@@ -12,16 +12,16 @@ status](https://github.com/r-lib/oskeyring/workflows/R-CMD-check/badge.svg)](htt
 
 ## Features
 
-  - Windows and macOS support. Read, write, list and search the system
+-   Windows and macOS support. Read, write, list and search the system
     credential store.
-  - Generic credentials, domain passwords, domain certificates on
+-   Generic credentials, domain passwords, domain certificates on
     Windows.
-  - Generic passwords and internet passwords on macOS.
-  - Multiple keychains on macOS.
+-   Generic passwords and internet passwords on macOS.
+-   Multiple keychains on macOS.
 
 ## Related
 
-  - The keyring R package provides a portable system keyring API for all
+-   The keyring R package provides a portable system keyring API for all
     platforms, and also supports multiple backends:
     <https://github.com/r-lib/keyring>
 
@@ -39,11 +39,11 @@ install.packages("oskeyring")
 library(oskeyring)
 ```
 
-Most oskeyring functions are not portable, and only work on one operating
-system (OS). The functions that do not use the system credential store
-can be used on all OSes. E.g. `macos_item()` and `windows_item()` are
-portable. Calling a function on the wrong OS will throw an
-`oskeyring_bad_os_error` error.
+Most oskeyring functions are not portable, and only work on one
+operating system (OS). The functions that do not use the system
+credential store can be used on all OSes. E.g. `macos_item()` and
+`windows_item()` are portable. Calling a function on the wrong OS will
+throw an `oskeyring_bad_os_error` error.
 
 oskeyring follows the API of the OS closely, and it has a different set
 of functions on Windows and macOS. E.g. the macOS API can search for
