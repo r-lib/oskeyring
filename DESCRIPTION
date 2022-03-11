@@ -1,6 +1,6 @@
 Package: oskeyring
 Title: Raw System Credential Store Access from R
-Version: 0.1.3
+Version: 0.1.3.9000
 Author: Gábor Csárdi
 Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
 Description: Aims to support all features of the system credential store,
