@@ -1,6 +1,8 @@
 
 # development version
 
+* This version fixes a potential crash on macOS (#11).
+
 # 0.1.2
 
 * Windows functions now use UTF-16 (little endian) encoding instead

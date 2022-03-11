@@ -290,7 +290,7 @@ static void macos_init_attr_list() {
   if (macos_attr_list[0].cf_label != NULL) return;
   int idx = 0;
   X(Account,            "account",             CFStringGetTypeID(),  CHARSXP);
-  X(AuthenticationType, "authentication_type", CFNumberGetTypeID(),  INTSXP);
+  X(AuthenticationType, "authentication_type", CFNumberGetTypeID(),  CHARSXP);
   X(Comment,            "comment",             CFStringGetTypeID(),  CHARSXP);
   X(CreationDate,       "creation_date",       CFDateGetTypeID(),    XDATESXP);
   X(Description,        "description",         CFStringGetTypeID(),  CHARSXP);
