@@ -75,10 +75,11 @@
 #' @name windows_credentials
 #' @examples
 #' # See above
-
 windows_item_types <- function() {
-  c("generic", "domain_password", "domain_certificate",
-    "domain_visible_password")
+  c(
+    "generic", "domain_password", "domain_certificate",
+    "domain_visible_password"
+  )
 }
 
 #' @param credential_blob The secret credential, a password,
@@ -134,10 +135,11 @@ windows_item_types <- function() {
 
 windows_item <- function(credential_blob, target_name,
                          type = "generic", comment = NULL,
-                         persist = c("local_machine", "session",
-                           "enterprise"), attributes = list(),
+                         persist = c(
+                           "local_machine", "session",
+                           "enterprise"
+                         ), attributes = list(),
                          target_alias = NULL, username = NULL) {
-
   persist <- match.arg(persist)
   stopifnot(
     is.null(credential_blob) || is_string_or_raw(credential_blob),
@@ -176,7 +178,8 @@ format.oskeyring_windows_item <- function(x, ...) {
     if (!is.null(x$target_alias)) paste0(" target_alias: ", x$target_alias),
     if (!is.null(x$username)) paste0(" username: ", x$username),
     if (length(x$attributes) > 0) {
-      c(" attributes:",
+      c(
+        " attributes:",
         paste0("  ", names(x$attributes), ": ", format_attr(x$attributes))
       )
     },
@@ -306,7 +309,9 @@ windows_item_from_utf16 <- function(item) {
 }
 
 to_utf16 <- function(x) {
-  if (is.null(x)) return(NULL)
+  if (is.null(x)) {
+    return(NULL)
+  }
   stopifnot(is_string(x))
   c(
     iconv(enc2utf8(x), from = "UTF-8", to = "UTF-16LE", toRaw = TRUE)[[1]],
@@ -315,6 +320,8 @@ to_utf16 <- function(x) {
 }
 
 from_utf16 <- function(x) {
-  if (length(x) == 1 && is.null(x[[1]])) return(NULL)
+  if (length(x) == 1 && is.null(x[[1]])) {
+    return(NULL)
+  }
   iconv(x, from = "UTF-16LE", to = "UTF-8")
 }

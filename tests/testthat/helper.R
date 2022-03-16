@@ -30,21 +30,27 @@ test_cleanup_macos <- function() {
       ),
       error = function(err) if (!empty_error(err)) print(err)
     )
-    tryCatch({
-      lst <- macos_keychain_list()
-      tst <- grep("oskeyking-test", lst$path, value = TRUE)
-      for (fn in tst) try(macos_keychain_delete(fn))
-    }, error = function(err) print(err))
+    tryCatch(
+      {
+        lst <- macos_keychain_list()
+        tst <- grep("oskeyking-test", lst$path, value = TRUE)
+        for (fn in tst) try(macos_keychain_delete(fn))
+      },
+      error = function(err) print(err)
+    )
   }
 }
 
 test_cleanup_windows <- function() {
   if (is_ci() && tolower(get_os()) == "windows") {
-    tryCatch({
-      its <- windows_item_enumerate("oskeyring-test-*")
-      for (it in its) {
-        try(windows_item_delete(it$target_name, it$type))
-      }
-    }, error = function(err) print(err))
+    tryCatch(
+      {
+        its <- windows_item_enumerate("oskeyring-test-*")
+        for (it in its) {
+          try(windows_item_delete(it$target_name, it$type))
+        }
+      },
+      error = function(err) print(err)
+    )
   }
 }
