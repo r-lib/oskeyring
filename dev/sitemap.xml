@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/CODE_OF_CONDUCT.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/authors.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/index.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/reference/macos_keychain.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/reference/oskeyring-package.html</loc>
+  </url>
+  <url>
+    <loc>https://r-lib.github.io/oskeyring/dev/reference/windows_credentials.html</loc>
+  </url>
+</urlset>
