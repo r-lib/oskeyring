@@ -5,9 +5,9 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/r-lib/oskeyring/workflows/R-CMD-check/badge.svg)](https://github.com/r-lib/oskeyring/actions)
-
+[![R-CMD-check](https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/r-lib/gh/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/gh?branch=main)
 <!-- badges: end -->
 
 ## Features
@@ -121,7 +121,7 @@ created with `macos_item()`:
 
 ``` r
 it <- macos_item(
-  "secret", 
+  "secret",
   list(service = "My service", account = "Gabor"),
   class = "generic_password"
 )
@@ -179,6 +179,13 @@ restrict the operation to a specific keychain.
 `macos_keychain_list()` lists all keychains on the search list.
 
 See more about macOS keychains in the manual: `?macos_keychain`.
+
+## Code of Conduct
+
+Please note that the oskeyring project is released with a [Contributor
+Code of
+Conduct](https://r-lib.github.io/oskeyring/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
 
 ## License
 

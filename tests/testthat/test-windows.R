@@ -68,7 +68,6 @@ osk_test_that("windows", "windows_item_write #2", {
   expect_error(
     windows_item_write(it)
   )
-
 })
 
 osk_test_that("windows", "unsupported os", {

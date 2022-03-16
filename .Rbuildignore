@@ -9,3 +9,7 @@
 ^src/oskeyring\.so$
 ^src/oskeyring\.dll$
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$

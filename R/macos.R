@@ -200,7 +200,6 @@
 #' @name macos_keychain
 #' @examples
 #' # See above
-
 macos_item_classes <- function() {
   # TODO: support the rest
   # c("generic_password", "internet_password", "certificate", "key", "identity")
@@ -312,8 +311,10 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
     is_flag(return_data),
     is_string(keychain) || is.null(keychain)
   )
-  call_with_cleanup(oskeyring_macos_search, class, attributes, match,
-                    return_data, keychain)
+  call_with_cleanup(
+    oskeyring_macos_search, class, attributes, match,
+    return_data, keychain
+  )
 }
 
 #' @param update Named list specifying the new values of attributes.
@@ -405,8 +406,10 @@ macos_keychain_create <- function(keychain, password = NULL) {
 #' @export
 #' @rdname macos_keychain
 
-macos_keychain_list <- function(domain = c("all", "user", "system",
-                                           "common", "dynamic")) {
+macos_keychain_list <- function(domain = c(
+                                  "all", "user", "system",
+                                  "common", "dynamic"
+                                )) {
   os_check("macOS")
   domain <- match.arg(domain)
   ret <- call_with_cleanup(oskeyring_macos_keychain_list, domain)
@@ -489,76 +492,91 @@ macos_keychain_is_locked <- function(keychain = NULL) {
 macos_item_attr <- function() {
   list(
     generic_password = list(
-#      access,
-#      access_control,
-#      access_group,
-#      accessible,
+      #      access,
+      #      access_control,
+      #      access_group,
+      #      accessible,
       creation_date = paste0(
-        "[.POSIXct(1)][read-only] The date the item was created."),
+        "[.POSIXct(1)][read-only] The date the item was created."
+      ),
       modification_date = paste0(
-        "[.POSIXct(1)][read-only] The last time the item was updated."),
+        "[.POSIXct(1)][read-only] The last time the item was updated."
+      ),
       description = paste0(
         "[character(1)] User-visible string describing this kind of",
-        "item (for example, 'Disk image password')."),
+        "item (for example, 'Disk image password')."
+      ),
       comment = "[character(1)] User-editable comment for this item.",
-#      "creator",
-#      "type",
+      #      "creator",
+      #      "type",
       label = "[character(1)] User-visible label for this item.",
       is_invisible = paste0(
         "[logical(1)] `TRUE` if the item is invisible (that is, should ",
-        "not be displayed)."),
+        "not be displayed)."
+      ),
       is_negative = paste0(
         "[logical(1)] Indicates whether there is a valid password ",
         "associated with this keychain item. This is useful if your ",
         "application doesn't want a password for some particular service ",
         "to be stored in the keychain, but prefers that it always be ",
-        "entered by the user."),
+        "entered by the user."
+      ),
       account = "[character(1)][key] Account name.",
       service = paste0(
-        "[character(1)][key] The service associated with this item."),
+        "[character(1)][key] The service associated with this item."
+      ),
       generic = "[character(1)] User-defined attribute.",
       synchronizable = paste0(
         "[logical(1)] Indicates whether the item in question is ",
-        "synchronized to other devices through iCloud.")
+        "synchronized to other devices through iCloud."
+      )
     ),
     internet_password = list(
-#      access,
-#      access_group,
-#      accessible,
+      #      access,
+      #      access_group,
+      #      accessible,
       creation_date = paste0(
-        "[.POSIXct(1)][read-only] The date the item was created."),
+        "[.POSIXct(1)][read-only] The date the item was created."
+      ),
       modification_date = paste0(
-        "[.POSIXct(1)][read-only] The last time the item was updated."),
+        "[.POSIXct(1)][read-only] The last time the item was updated."
+      ),
       description = paste0(
         "[character(1)] User-visible string describing this kind of",
-        "item (for example, 'Disk image password')."),
+        "item (for example, 'Disk image password')."
+      ),
       comment = "[character(1)] User-editable comment for this item.",
-#      "creator",
-#      "type",
+      #      "creator",
+      #      "type",
       label = "[character(1)] User-visible label for this item.",
       is_invisible = paste0(
         "[logical(1)] `TRUE` if the item is invisible (that is, should ",
-        "not be displayed)."),
+        "not be displayed)."
+      ),
       is_negative = paste0(
         "[logical(1)] Indicates whether there is a valid password ",
         "associated with this keychain item. This is useful if your ",
         "application doesn't want a password for some particular service ",
         "to be stored in the keychain, but prefers that it always be ",
-        "entered by the user."),
+        "entered by the user."
+      ),
       account = "[character(1)][key] Account name.",
       synchronizable = paste0(
         "[logical(1)] Indicates whether the item in question is ",
-        "synchronized to other devices through iCloud."),
+        "synchronized to other devices through iCloud."
+      ),
       security_domain = "[character(1)][key] The item's security domain.",
       server = paste0(
         "[character(1)][key] Contains the server's domain name or IP ",
-        "address."),
+        "address."
+      ),
       protocol = "[character(1)][key] The protocol for this item.",
       authentication_type = "character[1][key] Authentication type.",
       port = "[integer(1)][key] Internet port number.",
       path = paste0(
         "[character(1)][key] A path, typically the path component of ",
-        "the URL")
+        "the URL"
+      )
     )
   )
 }
@@ -588,7 +606,8 @@ macos_item_match_options <- function() {
     limit = paste0(
       "[numeric(1)] This value specifies the maximum number of results ",
       "to return or otherwise act upon. Use `Inf` to specify all ",
-      "matching items.")
+      "matching items."
+    )
   )
 }
 
@@ -610,23 +629,31 @@ item_list <- function(x) {
 }
 
 is_macos_attributes <- function(attr, class) {
-  if (!is_named_list(attr)) return(FALSE)
+  if (!is_named_list(attr)) {
+    return(FALSE)
+  }
   good <- macos_item_attr()[[class]]
   bad <- setdiff(names(attr), names(good))
   if (length(bad)) {
-    stop("Unknown attributes for `", class, "`:",
-         paste0("`", bad, "`", collapse = ", "))
+    stop(
+      "Unknown attributes for `", class, "`:",
+      paste0("`", bad, "`", collapse = ", ")
+    )
   }
   TRUE
 }
 
 is_macos_match <- function(x) {
-  if (!is_named_list(x)) return(FALSE)
+  if (!is_named_list(x)) {
+    return(FALSE)
+  }
   mtch <- macos_item_match_options()
   bad <- setdiff(names(x), names(mtch))
   if (length(bad)) {
-    stop("Unknown match parameters :",
-         paste0("`", bad, "`", collapse = ", "))
+    stop(
+      "Unknown match parameters :",
+      paste0("`", bad, "`", collapse = ", ")
+    )
   }
   TRUE
 }
