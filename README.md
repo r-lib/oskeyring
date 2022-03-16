@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/r-lib/oskeyring/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/oskeyring?branch=main)
+coverage](https://codecov.io/gh/r-lib/gh/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/gh?branch=main)
 <!-- badges: end -->
 
 ## Features
