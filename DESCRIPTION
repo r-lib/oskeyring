@@ -11,6 +11,7 @@ License: MIT + file LICENSE
 URL: https://github.com/r-lib/oskeyring#readme,
     https://r-lib.github.io/oskeyring/
 BugReports: https://github.com/r-lib/oskeyring/issues
+Depends: R (>= 3.4)
 Suggests:
     askpass,
     covr,
