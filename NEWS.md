@@ -1,4 +1,6 @@
-# oskeyring (development version)
+# oskeyring 0.1.4
+
+* No user visible changes.
 
 # oskeyring 0.1.3
 
