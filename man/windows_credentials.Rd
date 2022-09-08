@@ -132,45 +132,57 @@ credentials.
 \subsection{\code{windows_item_types()}}{
 
 \code{windows_item_types()} lists the currently supported credential
-types.\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_types()
-}\if{html}{\out{</div>}}\preformatted{## [1] "generic"                 "domain_password"        
-## [3] "domain_certificate"      "domain_visible_password"
-}
+types.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_types()
+#> [1] "generic"                 "domain_password"        
+#> [3] "domain_certificate"      "domain_visible_password"
+}\if{html}{\out{</div>}}
 }
 
 \subsection{\code{windows_item()}}{
 
 \code{windows_item()} creates a Windows credential, that can be
-then added to the credential store.\if{html}{\out{<div class="sourceCode r">}}\preformatted{it <- windows_item("secret", "my-host-password")
+then added to the credential store.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{it <- windows_item("secret", "my-host-password")
 it
-}\if{html}{\out{</div>}}\preformatted{## <oskeyring_windows_item: generic>
-##  target_name: my-host-password
-##  persist: local_machine
-##  credential_blob: <-- hidden -->
-}
+#> <oskeyring_windows_item: generic>
+#>  target_name: my-host-password
+#>  persist: local_machine
+#>  credential_blob: <-- hidden -->
+}\if{html}{\out{</div>}}
 }
 
 \subsection{\code{windows_item_write()}}{
 
-Writes an item to the credential store.\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_write(it)
+Writes an item to the credential store.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_write(it)
 }\if{html}{\out{</div>}}
 }
 
 \subsection{\code{windows_item_read()}}{
 
-Reads a credential with the specified type and \code{target_name}.\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_read("my-host-password")
+Reads a credential with the specified type and \code{target_name}.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_read("my-host-password")
 }\if{html}{\out{</div>}}
 }
 
 \subsection{\code{windows_item_enumerate()}}{
 
-List all credentials that match a prefix.\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_enumerate(filter = "my-*")
+List all credentials that match a prefix.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_enumerate(filter = "my-*")
 }\if{html}{\out{</div>}}
 }
 
 \subsection{\code{windows_item_delete()}}{
 
-Delete a credential:\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_delete("my-host-password")
+Delete a credential:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{windows_item_delete("my-host-password")
 windows_item_enumerate(filter = "my-*")
 }\if{html}{\out{</div>}}
 }
