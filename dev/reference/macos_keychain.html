@@ -5,7 +5,7 @@ keychains.
 macos_item_classes() lists the supported Keychain item classes.
 macos_item_attr() lists the supported attributes for these classes.
 macos_item_match_options() lists the options supported by the
-match argument of macos_item_search()."><title>Query and manipulate the macOS Keychain — macos_keychain • oskeyring</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Source%20Sans%20Pro-0.4.0/font.css" rel="stylesheet"><link href="../deps/_Source%20Code%20Pro-0.4.0/font.css" rel="stylesheet"><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Query and manipulate the macOS Keychain — macos_keychain"><meta property="og:description" content="macos_item_* functions add, delete, update and search Keychain items.
+match argument of macos_item_search()."><title>Query and manipulate the macOS Keychain — macos_keychain • oskeyring</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet"><link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet"><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Query and manipulate the macOS Keychain — macos_keychain"><meta property="og:description" content="macos_item_* functions add, delete, update and search Keychain items.
 macos_keychain_* functions create, delete, list, lock, unlock
 keychains.
 macos_item_classes() lists the supported Keychain item classes.
@@ -69,50 +69,50 @@ keychains.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">macos_item_classes</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">macos_item</span><span class="op">(</span><span class="va">value</span>, attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"generic_password"</span><span class="op">)</span>
-
-<span class="fu">macos_item_add</span><span class="op">(</span><span class="va">item</span>, keychain <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">macos_item_search</span><span class="op">(</span>
-  class <span class="op">=</span> <span class="st">"generic_password"</span>,
-  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  return_data <span class="op">=</span> <span class="cn">FALSE</span>,
-  keychain <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span>
-
-<span class="fu">macos_item_update</span><span class="op">(</span>
-  class <span class="op">=</span> <span class="st">"generic_password"</span>,
-  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  update <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  keychain <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span>
-
-<span class="fu">macos_item_delete</span><span class="op">(</span>
-  class <span class="op">=</span> <span class="st">"generic_password"</span>,
-  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  keychain <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span>
-
-<span class="fu">macos_keychain_create</span><span class="op">(</span><span class="va">keychain</span>, password <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">macos_keychain_list</span><span class="op">(</span>domain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"user"</span>, <span class="st">"system"</span>, <span class="st">"common"</span>, <span class="st">"dynamic"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu">macos_keychain_delete</span><span class="op">(</span><span class="va">keychain</span><span class="op">)</span>
-
-<span class="fu">macos_keychain_lock</span><span class="op">(</span>keychain <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">macos_keychain_unlock</span><span class="op">(</span>keychain <span class="op">=</span> <span class="cn">NULL</span>, password <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">macos_keychain_is_locked</span><span class="op">(</span>keychain <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="fu">macos_item_attr</span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu">macos_item_match_options</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">macos_item_classes</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item</span><span class="op">(</span><span class="va">value</span>, attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, class <span class="op">=</span> <span class="st">"generic_password"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item_add</span><span class="op">(</span><span class="va">item</span>, keychain <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item_search</span><span class="op">(</span></span>
+<span>  class <span class="op">=</span> <span class="st">"generic_password"</span>,</span>
+<span>  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  return_data <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  keychain <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item_update</span><span class="op">(</span></span>
+<span>  class <span class="op">=</span> <span class="st">"generic_password"</span>,</span>
+<span>  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  update <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  keychain <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item_delete</span><span class="op">(</span></span>
+<span>  class <span class="op">=</span> <span class="st">"generic_password"</span>,</span>
+<span>  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  match <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  keychain <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_keychain_create</span><span class="op">(</span><span class="va">keychain</span>, password <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_keychain_list</span><span class="op">(</span>domain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"user"</span>, <span class="st">"system"</span>, <span class="st">"common"</span>, <span class="st">"dynamic"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_keychain_delete</span><span class="op">(</span><span class="va">keychain</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_keychain_lock</span><span class="op">(</span>keychain <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_keychain_unlock</span><span class="op">(</span>keychain <span class="op">=</span> <span class="cn">NULL</span>, password <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_keychain_is_locked</span><span class="op">(</span>keychain <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item_attr</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">macos_item_match_options</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -121,22 +121,34 @@ keychains.</p>
 <dd><p>Value of the item, a password, key or certificate. It must
 a raw vector or a string. If it is a string, then it is converted to
 UTF-8.</p></dd>
+
+
 <dt>attributes</dt>
 <dd><p>Narrow the search by indicating the attributes that
 the found item or items should have.</p></dd>
+
+
 <dt>class</dt>
 <dd><p>Type of items to search, see <code>macos_item_classes()</code> for
 possible values.</p></dd>
+
+
 <dt>item</dt>
 <dd><p>Keychain item, creted via <code>macos_item()</code> or returned
 by oskeyking itself.</p></dd>
+
+
 <dt>keychain</dt>
 <dd><p>Keychain to use. <code>NULL</code> means the default one.</p></dd>
+
+
 <dt>match</dt>
 <dd><p>Condition the search in a variety of ways. For example, you
 can limit the results to a specific number of items, control case
 sensitivity when matching string attributes, etc. See 'Search parameters'
 below.</p></dd>
+
+
 <dt>return_data</dt>
 <dd><p>Whether to include the secret data in the
 search result. If this is set to <code>TRUE</code>, then you'll have to set the
@@ -144,12 +156,18 @@ search result. If this is set to <code>TRUE</code>, then you'll have to set the
 If this is <code>TRUE</code>, then macOS will prompt you for passwords if necessary.
 You might get multiple password prompts, if you set <code>limit</code> to a larger
 than one value.</p></dd>
+
+
 <dt>update</dt>
 <dd><p>Named list specifying the new values of attributes.</p></dd>
+
+
 <dt>password</dt>
 <dd><p>Password to unlock the keychain, or new password to
 set when creating a new keychain. May be <code>NULL</code> in interactive
 sessions, to force a secure password dialog.</p></dd>
+
+
 <dt>domain</dt>
 <dd><p>The preference domain from which you wish to retrieve
 the keychain search list:</p><ul><li><p><code>"all"</code>: include all keychains currently on the search list,</p></li>
@@ -159,72 +177,108 @@ the keychain search list:</p><ul><li><p><code>"all"</code>: include all keychain
 <li><p><code>"dynamic"</code>: dynamic search list (typically provided by removable
 keychains such as smart cards).</p></li>
 </ul></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>macos_item_classes()</code> returns a character vector, the
-names of the supported keychain item classes.
-<code>macos_item()</code> returns a new <code>oskeyring_macos_item</code>object.
-<code>macos_item_add()</code> returns <code>NULL</code>, invisibly.
-<code>macos_item_search()</code> returns a list of keychain items.
-<code>macos_item_update()</code> returns <code>NULL</code>, invisibly.
-<code>macos_item_delete()</code> returns <code>NULL</code>, invisibly.
-<code>macos_keychain_create()</code> returns <code>NULL</code>, invisibly.
-<code>macos_keychain_list()</code> returns a data frame with columns:</p><ul><li><p><code>path</code>: Path to the file of the keychain.</p></li>
+    
+
+<p><code>macos_item_classes()</code> returns a character vector, the
+names of the supported keychain item classes.</p>
+
+
+<p><code>macos_item()</code> returns a new <code>oskeyring_macos_item</code></p>
+
+
+<p>object.</p>
+
+
+<p><code>macos_item_add()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_item_search()</code> returns a list of keychain items.</p>
+
+
+<p><code>macos_item_update()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_item_delete()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_keychain_create()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_keychain_list()</code> returns a data frame with columns:</p><ul><li><p><code>path</code>: Path to the file of the keychain.</p></li>
 <li><p><code>is_locked</code>: Whether the keychain is locked.</p></li>
 <li><p><code>is_readable</code>: Whether the keychain is readable by the user.</p></li>
 <li><p><code>is_writeable</code>: Whether the keychain is writeable by the user.</p></li>
-</ul><p><code>macos_keychain_delete()</code> returns <code>NULL</code>, invisibly.
-<code>macos_keychain_lock()</code> returns <code>NULL</code>, invisibly.
-<code>macos_keychain_unlock()</code> returns <code>NULL</code>, invisibly.
-<code>macos_keychain_is_locked()</code> returns <code>TRUE</code> or <code>FALSE</code>.
-<code>macos_item_attr()</code> returns a list of lists of character
+</ul><p><code>macos_keychain_delete()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_keychain_lock()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_keychain_unlock()</code> returns <code>NULL</code>, invisibly.</p>
+
+
+<p><code>macos_keychain_is_locked()</code> returns <code>TRUE</code> or <code>FALSE</code>.</p>
+
+
+<p><code>macos_item_attr()</code> returns a list of lists of character
 scalars, the description of keychain item attributes, for each
-keychain item class.
-<code>macos_item_match_options()</code> returns a list of character
+keychain item class.</p>
+
+
+<p><code>macos_item_match_options()</code> returns a list of character
 scalars, the description of the supported match options.</p>
     </div>
     <div class="section level2">
     <h2 id="keychain-items">Keychain items<a class="anchor" aria-label="anchor" href="#keychain-items"></a></h2>
     <p><code>macos_item_classes()</code> returns the currently supported Keychain item
-classes.</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_item_classes</a></span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">## [1] "generic_password"  "internet_password"</span></code></pre></div>
-
+classes.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_classes</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "generic_password"  "internet_password"</span></span></code></pre><p></p></div>
 <p><code>macos_item()</code> creates a new Keychain item. See the next section about
-the attributes that are supported for the various item types.</p><div class="sourceCode r"><pre><code><span class="va">it</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/macos_keychain.html">macos_item</a></span><span class="op">(</span><span class="st">"secret"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span>, account <span class="op">=</span> <span class="st">"Gabor"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">it</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">## &lt;oskeyring_macos_item: generic_password&gt;</span>
-<span class="co">##  account: Gabor</span>
-<span class="co">##  service: My service</span>
-<span class="co">##  value: &lt;-- hidden --&gt;</span></code></pre></div>
-
+the attributes that are supported for the various item types.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">it</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/macos_keychain.html">macos_item</a></span><span class="op">(</span><span class="st">"secret"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span>, account <span class="op">=</span> <span class="st">"Gabor"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">it</span></span>
+<span><span class="co">#&gt; &lt;oskeyring_macos_item: generic_password&gt;</span></span>
+<span><span class="co">#&gt;  account: Gabor</span></span>
+<span><span class="co">#&gt;  service: My service</span></span>
+<span><span class="co">#&gt;  value: &lt;-- hidden --&gt;</span></span></code></pre><p></p></div>
 <p><code>macos_item_add()</code> adds an item to the keychain. If there is already an
-item with the same primary keys, then it will error.</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_item_add</a></span><span class="op">(</span><span class="va">it</span><span class="op">)</span></code></pre><p></p></div>
+item with the same primary keys, then it will error.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_add</a></span><span class="op">(</span><span class="va">it</span><span class="op">)</span></span></code></pre><p></p></div>
 <p><code>macos_item_search()</code> searches for Keychain items. If <code>return_data</code> is
 <code>TRUE</code> then it also returns the secret data. Returning the secret data
 might create a password entry dialog. If <code>return_data</code> is <code>TRUE</code> then
-you need to set the <code>limit</code> match condition to a (small) finite number.</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">## [[1]]</span>
-<span class="co">## &lt;oskeyring_macos_item: generic_password&gt;</span>
-<span class="co">##  account: Gabor</span>
-<span class="co">##  creation_date: 2021-11-17 15:48:52</span>
-<span class="co">##  label: My service</span>
-<span class="co">##  modification_date: 2021-11-17 15:48:52</span>
-<span class="co">##  service: My service</span></code></pre></div>
-
-<p><code>macos_item_update()</code> updates existing Keychain items.</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_item_update</a></span><span class="op">(</span>
-  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span>, account <span class="op">=</span> <span class="st">"Gabor"</span><span class="op">)</span>,
-  update <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>account <span class="op">=</span> <span class="st">"Gabor Csardi"</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">## [[1]]</span>
-<span class="co">## &lt;oskeyring_macos_item: generic_password&gt;</span>
-<span class="co">##  account: Gabor Csardi</span>
-<span class="co">##  creation_date: 2021-11-17 15:48:52</span>
-<span class="co">##  label: My service</span>
-<span class="co">##  modification_date: 2021-11-17 15:48:52</span>
-<span class="co">##  service: My service</span></code></pre></div>
-
+you need to set the <code>limit</code> match condition to a (small) finite number.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; &lt;oskeyring_macos_item: generic_password&gt;</span></span>
+<span><span class="co">#&gt;  account: Gabor</span></span>
+<span><span class="co">#&gt;  creation_date: 2022-09-08 11:04:52</span></span>
+<span><span class="co">#&gt;  label: My service</span></span>
+<span><span class="co">#&gt;  modification_date: 2022-09-08 11:04:52</span></span>
+<span><span class="co">#&gt;  service: My service</span></span></code></pre><p></p></div>
+<p><code>macos_item_update()</code> updates existing Keychain items.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_update</a></span><span class="op">(</span></span>
+<span>  attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span>, account <span class="op">=</span> <span class="st">"Gabor"</span><span class="op">)</span>,</span>
+<span>  update <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>account <span class="op">=</span> <span class="st">"Gabor Csardi"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; &lt;oskeyring_macos_item: generic_password&gt;</span></span>
+<span><span class="co">#&gt;  account: Gabor Csardi</span></span>
+<span><span class="co">#&gt;  creation_date: 2022-09-08 11:04:52</span></span>
+<span><span class="co">#&gt;  label: My service</span></span>
+<span><span class="co">#&gt;  modification_date: 2022-09-08 11:04:52</span></span>
+<span><span class="co">#&gt;  service: My service</span></span></code></pre><p></p></div>
 <p><code>macos_item_delete()</code> deletes one or more Keychain items. Note that
-all matching items will be deleted.</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_item_delete</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode"><pre><code><span class="co">## list()</span></code></pre></div>
-<div class="section">
+all matching items will be deleted.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_delete</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; list()</span></span></code></pre><p></p></div><div class="section">
 <h3 id="keychain-item-attributes">Keychain Item Attributes<a class="anchor" aria-label="anchor" href="#keychain-item-attributes"></a></h3>
 
 <ul><li><p>The set of supported attributes depends on the class of the item.</p></li>
@@ -303,36 +357,44 @@ search list.</p></li>
 <li><p><code>macos_item_delete()</code> deletes matching items from all keychains in the
 search list.</p></li>
 </ul><p><code>macos_keychain_create()</code> creates a new keychain.</p>
-<p><code>macos_keychain_list()</code> lists all keychains on the search list.</p><div class="sourceCode r"><pre><code><span class="va">new</span> <span class="op">&lt;-</span> <span class="st">"~/Library/Keychains/test.keychain-db"</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_create</a></span><span class="op">(</span><span class="va">new</span>, password <span class="op">=</span> <span class="st">"secret"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_list</a></span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode r"><pre><code><span class="co">##                                                     path is_unlocked</span>
-<span class="co">## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE</span>
-<span class="co">## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE</span>
-<span class="co">## 3  /Users/gaborcsardi/Library/Keychains/test.keychain-db        TRUE</span>
-<span class="co">## 4                     /Library/Keychains/System.keychain       FALSE</span>
-<span class="co">##   is_readable is_writeable</span>
-<span class="co">## 1        TRUE         TRUE</span>
-<span class="co">## 2        TRUE        FALSE</span>
-<span class="co">## 3        TRUE         TRUE</span>
-<span class="co">## 4        TRUE        FALSE</span></code></pre><p></p></div>
+<p><code>macos_keychain_list()</code> lists all keychains on the search list.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="va">new</span> <span class="op">&lt;-</span> <span class="st">"~/Library/Keychains/test.keychain-db"</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_create</a></span><span class="op">(</span><span class="va">new</span>, password <span class="op">=</span> <span class="st">"secret"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_list</a></span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="co">##                                                     path is_unlocked</span></span>
+<span><span class="co">## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE</span></span>
+<span><span class="co">## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE</span></span>
+<span><span class="co">## 3  /Users/gaborcsardi/Library/Keychains/test.keychain-db        TRUE</span></span>
+<span><span class="co">## 4                     /Library/Keychains/System.keychain       FALSE</span></span>
+<span><span class="co">##   is_readable is_writeable</span></span>
+<span><span class="co">## 1        TRUE         TRUE</span></span>
+<span><span class="co">## 2        TRUE        FALSE</span></span>
+<span><span class="co">## 3        TRUE         TRUE</span></span>
+<span><span class="co">## 4        TRUE        FALSE</span></span></code></pre><p></p></div>
 <p><code>macos_keychain_lock()</code> locks a keychain.
 <code>macos_keychain_unlock()</code> unlocks a keychain.
-<code>macos_keychain_is_locked()</code> checks if a keychain is locked.</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_lock</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_is_locked</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode r"><pre><code><span class="co">## [1] TRUE</span></code></pre><p></p></div><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_unlock</a></span><span class="op">(</span><span class="va">new</span>, password <span class="op">=</span> <span class="st">"secret"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_is_locked</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode r"><pre><code><span class="co">## [1] FALSE</span></code></pre><p></p></div>
+<code>macos_keychain_is_locked()</code> checks if a keychain is locked.</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_lock</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_is_locked</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="co">## [1] TRUE</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_unlock</a></span><span class="op">(</span><span class="va">new</span>, password <span class="op">=</span> <span class="st">"secret"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_is_locked</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="co">## [1] FALSE</span></span></code></pre><p></p></div>
 <p><code>macos_keychain_delete()</code> deletes a keychain: it removes it from the
 search list and deletes the data from the disk. It currently refuses to
 delete the user's login keychain and the system keychain. Use Keychain
 Access instead if you want to delete these. (Only do this if you are
-aware of the bad consequences.)</p><div class="sourceCode r"><pre><code><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_delete</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span>
-<span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_list</a></span><span class="op">(</span><span class="op">)</span></code></pre><p></p></div><div class="sourceCode r"><pre><code><span class="co">##                                                     path is_unlocked</span>
-<span class="co">## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE</span>
-<span class="co">## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE</span>
-<span class="co">## 3                     /Library/Keychains/System.keychain       FALSE</span>
-<span class="co">##   is_readable is_writeable</span>
-<span class="co">## 1        TRUE         TRUE</span>
-<span class="co">## 2        TRUE        FALSE</span>
-<span class="co">## 3        TRUE        FALSE</span></code></pre><p></p></div>
+aware of the bad consequences.)</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_delete</a></span><span class="op">(</span><span class="va">new</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/macos_keychain.html">macos_keychain_list</a></span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="co">##                                                     path is_unlocked</span></span>
+<span><span class="co">## 1 /Users/gaborcsardi/Library/Keychains/login.keychain-db        TRUE</span></span>
+<span><span class="co">## 2 /Users/gaborcsardi/Library/Keychains/shiny.keychain-db       FALSE</span></span>
+<span><span class="co">## 3                     /Library/Keychains/System.keychain       FALSE</span></span>
+<span><span class="co">##   is_readable is_writeable</span></span>
+<span><span class="co">## 1        TRUE         TRUE</span></span>
+<span><span class="co">## 2        TRUE        FALSE</span></span>
+<span><span class="co">## 3        TRUE        FALSE</span></span></code></pre><p></p></div>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -342,7 +404,7 @@ aware of the bad consequences.)</p><div class="sourceCode r"><pre><code><span cl
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># See above</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># See above</span></span></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
@@ -357,7 +419,7 @@ aware of the bad consequences.)</p><div class="sourceCode r"><pre><code><span cl
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
   </div></footer></body></html>
