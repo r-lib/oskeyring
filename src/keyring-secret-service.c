@@ -1,6 +1,6 @@
 
 /* Avoid warning about empty compilation unit. */
-void keyring_secret_service_dummy() { }
+void keyring_secret_service_dummy(void) { }
 
 #ifndef _WIN32
 #ifndef __APPLE__

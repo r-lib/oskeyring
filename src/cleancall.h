@@ -29,7 +29,7 @@ typedef void (*finalizer_t)(void* data);
   {"cleancall_call", (DL_FUNC) &cleancall_call, 2}
 
 SEXP cleancall_call(SEXP args, SEXP env);
-void cleancall_init();
+void cleancall_init(void);
 
 // --------------------------------------------------------------------
 // Public API

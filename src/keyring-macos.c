@@ -1,6 +1,6 @@
 
 /* Avoid warning about empty compilation unit. */
-void oskeyring_macos_dummy() { }
+void oskeyring_macos_dummy(void) { }
 
 #ifdef __APPLE__
 
