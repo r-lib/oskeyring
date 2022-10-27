@@ -34,7 +34,7 @@ windows_item_enumerate(filter = NULL, all = FALSE)
 \arguments{
 \item{credential_blob}{The secret credential, a password,
 certificate or key. See also
-\url{https://docs.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentialw}
+\url{https://learn.microsoft.com/en-us/windows/win32/api/wincred/}
 This can be a raw vector, or a string. If it is a string, then it
 will be converted to Unicode, without the terminating zero.
 It can also be \code{NULL}, to be used with the \code{preserve = TRUE}
@@ -192,5 +192,5 @@ windows_item_enumerate(filter = "my-*")
 }
 \seealso{
 The API documentation at
-\url{https://docs.microsoft.com/en-us/windows/win32/api/wincred/}
+\url{https://learn.microsoft.com/en-us/windows/win32/api/wincred/}
 }

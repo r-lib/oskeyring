@@ -53,7 +53,7 @@ Windows, so oskeyring does not have a `windows_item_search()` function.
 ### Windows Credential Store
 
 oskeyring uses the API defined in
-[`wincred.h`](https://docs.microsoft.com/en-us/windows/win32/api/wincred/)
+[`wincred.h`](https://learn.microsoft.com/en-us/windows/win32/api/wincred/)
 on Windows. The Windows credential store contains various credential
 types. The ones supported by oskeyring are:
 

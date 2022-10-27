@@ -59,7 +59,7 @@ E.g. the macOS API can search for keychain items based on item attributes, but t
 
 ### Windows Credential Store
 
-oskeyring uses the API defined in [`wincred.h`](https://docs.microsoft.com/en-us/windows/win32/api/wincred/) on Windows.
+oskeyring uses the API defined in [`wincred.h`](https://learn.microsoft.com/en-us/windows/win32/api/wincred/) on Windows.
 The Windows credential store contains various credential types.
 The ones supported by oskeyring are:
 

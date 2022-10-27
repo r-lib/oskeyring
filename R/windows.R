@@ -67,7 +67,7 @@
 #' ```
 #'
 #' @seealso The API documentation at
-#' <https://docs.microsoft.com/en-us/windows/win32/api/wincred/>
+#' <https://learn.microsoft.com/en-us/windows/win32/api/wincred/>
 #' @export
 #' @return `windows_item_types()` returns a character vector, the
 #' currently supported credential types.
@@ -84,7 +84,7 @@ windows_item_types <- function() {
 
 #' @param credential_blob The secret credential, a password,
 #' certificate or key. See also
-#' <https://docs.microsoft.com/en-us/windows/win32/api/wincred/ns-wincred-credentialw>
+#' <https://learn.microsoft.com/en-us/windows/win32/api/wincred/>
 #' This can be a raw vector, or a string. If it is a string, then it
 #' will be converted to Unicode, without the terminating zero.
 #' It can also be `NULL`, to be used with the `preserve = TRUE`
