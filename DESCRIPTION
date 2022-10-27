@@ -1,6 +1,6 @@
 Package: oskeyring
 Title: Raw System Credential Store Access from R
-Version: 0.1.5
+Version: 0.1.5.9000
 Authors@R: c(
     person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
     person("RStudio", role = c("cph", "fnd"))
