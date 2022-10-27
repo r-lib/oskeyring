@@ -500,7 +500,10 @@ SecKeychainRef oskeyring_macos_open_keychain(const char *pathName, int fin) {
   /* We need to query the status, because SecKeychainOpen succeeds,
      even if the keychain file does not exists. (!) */
   SecKeychainStatus keychainStatus = 0;
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   status = SecKeychainGetStatus(keychain, &keychainStatus);
+# pragma GCC diagnostic pop
   oskeyring_macos_handle_status("cannot open keychain", status);
 
   return keychain;
@@ -667,9 +670,12 @@ SEXP oskeyring_macos_keychain_create(SEXP keyring, SEXP password) {
   oskeyring_macos_handle_status("cannot create keychain", status);
 
   CFArrayRef keyrings = NULL;
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   status = SecKeychainCopyDomainSearchList(
     kSecPreferencesDomainUser,
     &keyrings);
+# pragma GCC diagnostic pop
 
   if (status) {
 # pragma GCC diagnostic push
@@ -690,9 +696,12 @@ SEXP oskeyring_macos_keychain_create(SEXP keyring, SEXP password) {
   CFMutableArrayRef newkeyrings =
     CFArrayCreateMutableCopy(NULL, count + 1, keyrings);
   CFArrayAppendValue(newkeyrings, result);
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   status = SecKeychainSetDomainSearchList(
     kSecPreferencesDomainUser,
     newkeyrings);
+# pragma GCC diagnostic pop
 
   if (status) {
 # pragma GCC diagnostic push
@@ -719,7 +728,10 @@ SEXP oskeyring_macos_keychain_list(SEXP domain) {
   OSStatus status;
 
   if (!strcmp(cdomain, "all")) {
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     status = SecKeychainCopySearchList(&chains);
+# pragma GCC diagnostic pop
     oskeyring_macos_handle_status("Cannot get keychain list", status);
   } else {
     SecPreferencesDomain mdomain;
@@ -734,7 +746,10 @@ SEXP oskeyring_macos_keychain_list(SEXP domain) {
     } else {
       Rf_error("Unknown keychain domain: `%s`.", cdomain);
     }
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     status = SecKeychainCopyDomainSearchList(mdomain, &chains);
+# pragma GCC diagnostic pop
     oskeyring_macos_handle_status("Cannot get keychain list", status);
   }
 
@@ -759,7 +774,10 @@ SEXP oskeyring_macos_keychain_list(SEXP domain) {
       VECTOR_ELT(result, 0), i,
       Rf_mkCharLen(pathName, pathLength));
     SecKeychainStatus cstat = 0;
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     status = SecKeychainGetStatus(chain, &cstat);
+# pragma GCC diagnostic pop
     oskeyring_macos_handle_status("Cannot query keychain status", status);
     LOGICAL(VECTOR_ELT(result, 1))[i] = cstat & kSecUnlockStateStatus;
     LOGICAL(VECTOR_ELT(result, 2))[i] = cstat & kSecReadPermStatus;
@@ -777,9 +795,12 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
   /* Need to remove it from the search list as well */
 
   CFArrayRef keyrings = NULL;
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   OSStatus status = SecKeychainCopyDomainSearchList(
     kSecPreferencesDomainUser,
     &keyrings);
+# pragma GCC diagnostic pop
   oskeyring_macos_handle_status("cannot delete keyring", status);
 
   CFIndex i, count = CFArrayGetCount(keyrings);
@@ -802,9 +823,12 @@ SEXP oskeyring_macos_keychain_delete(SEXP keyring) {
     }
     if (!strcmp(pathName, ckeyring)) {
       CFArrayRemoveValueAtIndex(newkeyrings, (CFIndex) i);
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
       status = SecKeychainSetDomainSearchList(
         kSecPreferencesDomainUser,
 	newkeyrings);
+# pragma GCC diagnostic pop
       if (status) {
 	CFRelease(keyrings);
 	CFRelease(newkeyrings);
@@ -866,7 +890,10 @@ SEXP oskeyring_macos_keychain_is_locked(SEXP keyring) {
     oskeyring_macos_open_keychain(CHAR(STRING_ELT(keyring, 0)), 1);
 
   SecKeychainStatus kstatus;
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   OSStatus status = SecKeychainGetStatus(keychain, &kstatus);
+# pragma GCC diagnostic pop
   if (status) oskeyring_macos_error("cannot get lock information", status);
 
   return Rf_ScalarLogical(! (kstatus & kSecUnlockStateStatus));
