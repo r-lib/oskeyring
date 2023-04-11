@@ -78,7 +78,7 @@ static struct macos_attr_protocol_t protocols[MACOS_ATTR_PROTOCOL_NUM];
     protocols[idx++].r_name = c;                                        \
   } while (0)                                                           \
 
-static void macos_init_protocol_list() {
+static void macos_init_protocol_list(void) {
   if (protocols[0].cf_label != NULL) return;
   int idx = 0;
   X(FTP, "ftp");
@@ -285,7 +285,7 @@ static struct macos_attr macos_attr_list[OSKEYRING_MACOS_ATTR_NUM];
     macos_attr_list[idx++].r_type = e;                                  \
   } while (0)
 
-static void macos_init_attr_list() {
+static void macos_init_attr_list(void) {
   /* already initialized? */
   if (macos_attr_list[0].cf_label != NULL) return;
   int idx = 0;
