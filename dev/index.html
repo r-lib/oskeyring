@@ -12,8 +12,8 @@
 <title>Raw System Credential Store Access from R • oskeyring</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.5/font.css" rel="stylesheet">
-<link href="deps/Source_Code_Pro-0.4.5/font.css" rel="stylesheet">
+<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_Pro-0.4.7/font.css" rel="stylesheet">
+<link href="deps/Source_Code_Pro-0.4.7/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Raw System Credential Store Access from R">
@@ -101,11 +101,14 @@
 <p>Install the package from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"oskeyring"</span><span class="op">)</span></span></code></pre></div>
+<p>To install the development version from GitHub run:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"r-lib/oskeyring"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/oskeyring#readme" class="external-link">oskeyring</a></span><span class="op">)</span></span></code></pre></div>
 <p>Most oskeyring functions are not portable, and only work on one operating system (OS). The functions that do not use the system credential store can be used on all OSes. E.g. <code><a href="reference/macos_keychain.html">macos_item()</a></code> and <code><a href="reference/windows_credentials.html">windows_item()</a></code> are portable. Calling a function on the wrong OS will throw an <code>oskeyring_bad_os_error</code> error.</p>
 <p>oskeyring follows the API of the OS closely, and it has a different set of functions on Windows and macOS. E.g. the macOS API can search for keychain items based on item attributes, but there is no similar API on Windows, so oskeyring does not have a <code>windows_item_search()</code> function.</p>
@@ -113,24 +116,24 @@
 <h3 id="windows-credential-store">Windows Credential Store<a class="anchor" aria-label="anchor" href="#windows-credential-store"></a>
 </h3>
 <p>oskeyring uses the API defined in <a href="https://learn.microsoft.com/en-us/windows/win32/api/wincred/" class="external-link"><code>wincred.h</code></a> on Windows. The Windows credential store contains various credential types. The ones supported by oskeyring are:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/windows_credentials.html">windows_item_types</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "generic"                 "domain_password"        </span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "domain_certificate"      "domain_visible_password"</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "generic"                 "domain_password"        </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] "domain_certificate"      "domain_visible_password"</span></span></code></pre></div>
 <p><code><a href="reference/windows_credentials.html">windows_item_write()</a></code> adds or updates a credential in the credential store. It takes objects created with <code><a href="reference/windows_credentials.html">windows_item()</a></code> :</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">it</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/windows_credentials.html">windows_item</a></span><span class="op">(</span><span class="st">"secret"</span>, <span class="st">"my-host-password"</span><span class="op">)</span></span>
 <span><span class="va">it</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;oskeyring_windows_item: generic&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  target_name: my-host-password</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  persist: local_machine</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  credential_blob: &lt;-- hidden --&gt;</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;oskeyring_windows_item: generic&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  target_name: my-host-password</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  persist: local_machine</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  credential_blob: &lt;-- hidden --&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/windows_credentials.html">windows_item_write</a></span><span class="op">(</span><span class="va">it</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="reference/windows_credentials.html">windows_item_read()</a></code> reads a credential from the credential store, the return value includes the secret as well:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/windows_credentials.html">windows_item_read</a></span><span class="op">(</span><span class="st">"my-host-password"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/windows_credentials.html">windows_item_read</a></span><span class="op">(</span><span class="st">"my-host-password"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#&gt; &lt;oskeyring_windows_item: generic&gt;</span></span>
 <span><span class="co">#&gt;  target_name: my-host-password</span></span>
 <span><span class="co">#&gt;  persist: local_machine</span></span>
@@ -146,28 +149,28 @@
 <h4 id="keychain-items">Keychain items<a class="anchor" aria-label="anchor" href="#keychain-items"></a>
 </h4>
 <p>oskeyring uses the <a href="https://developer.apple.com/documentation/security/keychain_services" class="external-link">Keychain API</a> on macOS. macOS keychains can store various classes of items. The item classes supported by oskeyring are:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/macos_keychain.html">macos_item_classes</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "generic_password"  "internet_password"</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "generic_password"  "internet_password"</span></span></code></pre></div>
 <p><code><a href="reference/macos_keychain.html">macos_item_add()</a></code> adds a new item to a keychain. It takes objects created with <code><a href="reference/macos_keychain.html">macos_item()</a></code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">it</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/macos_keychain.html">macos_item</a></span><span class="op">(</span></span>
 <span>  <span class="st">"secret"</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span>, account <span class="op">=</span> <span class="st">"Gabor"</span><span class="op">)</span>,</span>
 <span>  class <span class="op">=</span> <span class="st">"generic_password"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">it</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;oskeyring_macos_item: generic_password&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  account: Gabor</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  service: My service</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  value: &lt;-- hidden --&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;oskeyring_macos_item: generic_password&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  account: Gabor</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  service: My service</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  value: &lt;-- hidden --&gt;</span></span></code></pre></div>
 <p>Items contain the secret itself, and a set of attributes, that depends on the item class. See <code><a href="reference/macos_keychain.html">?macos_keychain</a></code> for the list of attributes for each class.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/macos_keychain.html">macos_item_add</a></span><span class="op">(</span><span class="va">it</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="reference/macos_keychain.html">macos_item_search()</a></code> searches for a keychain item:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/macos_keychain.html">macos_item_search</a></span><span class="op">(</span>attributes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>service <span class="op">=</span> <span class="st">"My service"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; &lt;oskeyring_macos_item: generic_password&gt;</span></span>
 <span><span class="co">#&gt;  account: Gabor</span></span>
@@ -213,9 +216,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
@@ -239,7 +241,7 @@
 <li>
 <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a> <br><small class="roles"> Author, maintainer </small>  </li>
 <li>
-<a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a> <br><small class="roles"> Copyright holder, funder </small>  </li>
+<a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" style="margin-bottom: 3px;"></a> <br><small class="roles"> Copyright holder, funder </small>  </li>
 </ul>
 </div>
 
@@ -247,7 +249,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/r-lib/gh?branch=main" class="external-link"><img src="https://codecov.io/gh/r-lib/gh/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://app.codecov.io/gh/r-lib/oskeyring?branch=main" class="external-link"><img src="https://codecov.io/gh/r-lib/oskeyring/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
@@ -259,7 +261,7 @@
   <footer><div class="container">
   <div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>, <a href="https://www.rstudio.com" class="external-link"><img src="https://www.tidyverse.org/rstudio-logo.svg" alt="RStudio" width="72"></a>.</p>
+<p>Developed by <a href="https://github.com/gaborcsardi" class="external-link">Gábor Csárdi</a>, <a href="https://www.posit.co" class="external-link"><img src="https://www.tidyverse.org/posit-logo.svg" alt="Posit" height="16" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
