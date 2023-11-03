@@ -193,9 +193,9 @@ you need to set the \code{limit} match condition to a (small) finite number.
 #> [[1]]
 #> <oskeyring_macos_item: generic_password>
 #>  account: Gabor
-#>  creation_date: 2022-10-27 11:08:28
+#>  creation_date: 2023-11-03 12:30:13
 #>  label: My service
-#>  modification_date: 2022-10-27 11:08:28
+#>  modification_date: 2023-11-03 12:30:13
 #>  service: My service
 }\if{html}{\out{</div>}}
 
@@ -209,9 +209,9 @@ macos_item_search(attributes = list(service = "My service"))
 #> [[1]]
 #> <oskeyring_macos_item: generic_password>
 #>  account: Gabor Csardi
-#>  creation_date: 2022-10-27 11:08:28
+#>  creation_date: 2023-11-03 12:30:13
 #>  label: My service
-#>  modification_date: 2022-10-27 11:08:28
+#>  modification_date: 2023-11-03 12:30:13
 #>  service: My service
 }\if{html}{\out{</div>}}
 
