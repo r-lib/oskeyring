@@ -7,23 +7,22 @@
 
 [![R-CMD-check](https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/oskeyring/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/r-lib/gh/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/gh?branch=main)
+coverage](https://codecov.io/gh/r-lib/oskeyring/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/oskeyring?branch=main)
 <!-- badges: end -->
 
 ## Features
 
--   Windows and macOS support. Read, write, list and search the system
-    credential store.
--   Generic credentials, domain passwords, domain certificates on
-    Windows.
--   Generic passwords and internet passwords on macOS.
--   Multiple keychains on macOS.
+- Windows and macOS support. Read, write, list and search the system
+  credential store.
+- Generic credentials, domain passwords, domain certificates on Windows.
+- Generic passwords and internet passwords on macOS.
+- Multiple keychains on macOS.
 
 ## Related
 
--   The keyring R package provides a portable system keyring API for all
-    platforms, and also supports multiple backends:
-    <https://github.com/r-lib/keyring>
+- The keyring R package provides a portable system keyring API for all
+  platforms, and also supports multiple backends:
+  <https://github.com/r-lib/keyring>
 
 ## Installation
 
