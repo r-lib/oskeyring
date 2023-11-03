@@ -32,6 +32,12 @@ Install the package from CRAN:
 install.packages("oskeyring")
 ```
 
+To install the development version from GitHub run:
+
+``` r
+pak::pak("r-lib/oskeyring")
+```
+
 ## Usage
 
 ``` r
