@@ -6,7 +6,10 @@ editor_options:
     canonical: true
 ---
 
-```{r, setup, echo = FALSE, message = FALSE}
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
 knitr::opts_chunk$set(
   comment = "#>",
   tidy = FALSE,
@@ -39,13 +42,15 @@ knitr::opts_chunk$set(
 
 Install the package from CRAN:
 
-```{r eval = FALSE}
+```{r}
+#| eval: false
 install.packages("oskeyring")
 ```
 
 To install the development version from GitHub run:
 
-```{r eval = FALSE}
+```{r}
+#| eval: false
 pak::pak("r-lib/oskeyring")
 ```
 
