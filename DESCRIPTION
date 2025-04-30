@@ -3,7 +3,7 @@ Title: Raw System Credential Store Access from R
 Version: 0.1.6.9000
 Authors@R: c(
     person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
-    person("Posit Software, PBC", role = c("cph", "fnd"))
+    person("Posit Software, PBC", role = c("cph", "fnd"), comment = c(ROR = "03wc8by49"))
   )
 Description: Aims to support all features of the system credential store,
     including non-portable ones. Supports 'Keychain' on 'macOS', and
@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 URL: https://github.com/r-lib/oskeyring#readme,
     https://r-lib.github.io/oskeyring/
 BugReports: https://github.com/r-lib/oskeyring/issues
-Depends: 
+Depends:
     R (>= 3.6)
 Suggests:
     askpass,
