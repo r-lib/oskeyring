@@ -1,4 +1,3 @@
-
 is_ci <- function() {
   Sys.getenv("CI", "") != ""
 }
@@ -9,7 +8,9 @@ random_name <- function() {
 
 osk_test_that <- function(os, desc, code) {
   if (is_ci() && tolower(os) == get_os()) {
-    testthat::test_that(desc, { code })
+    testthat::test_that(desc, {
+      code
+    })
   }
 }
 

@@ -1,4 +1,3 @@
-
 #' Query and manipulate the Windows Credential Store
 #'
 #' @description
@@ -77,7 +76,9 @@
 #' # See above
 windows_item_types <- function() {
   c(
-    "generic", "domain_password", "domain_certificate",
+    "generic",
+    "domain_password",
+    "domain_certificate",
     "domain_visible_password"
   )
 }
@@ -133,13 +134,20 @@ windows_item_types <- function() {
 #' @export
 #' @rdname windows_credentials
 
-windows_item <- function(credential_blob, target_name,
-                         type = "generic", comment = NULL,
-                         persist = c(
-                           "local_machine", "session",
-                           "enterprise"
-                         ), attributes = list(),
-                         target_alias = NULL, username = NULL) {
+windows_item <- function(
+  credential_blob,
+  target_name,
+  type = "generic",
+  comment = NULL,
+  persist = c(
+    "local_machine",
+    "session",
+    "enterprise"
+  ),
+  attributes = list(),
+  target_alias = NULL,
+  username = NULL
+) {
   persist <- match.arg(persist)
   stopifnot(
     is.null(credential_blob) || is_string_or_raw(credential_blob),

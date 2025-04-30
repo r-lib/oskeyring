@@ -1,4 +1,3 @@
-
 #' Query and manipulate the macOS Keychain
 #'
 #' @description
@@ -222,8 +221,7 @@ macos_item_classes <- function() {
 #' @export
 #' @rdname macos_keychain
 
-macos_item <- function(value, attributes = list(),
-                       class = "generic_password") {
+macos_item <- function(value, attributes = list(), class = "generic_password") {
   stopifnot(
     class %in% macos_item_classes(),
     is_string(value),
@@ -300,9 +298,13 @@ macos_item_add <- function(item, keychain = NULL) {
 #' @export
 #' @rdname macos_keychain
 
-macos_item_search <- function(class = "generic_password", attributes = list(),
-                              match = list(), return_data = FALSE,
-                              keychain = NULL) {
+macos_item_search <- function(
+  class = "generic_password",
+  attributes = list(),
+  match = list(),
+  return_data = FALSE,
+  keychain = NULL
+) {
   os_check("macOS")
   stopifnot(
     class %in% macos_item_classes(),
@@ -312,8 +314,12 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
     is_string(keychain) || is.null(keychain)
   )
   call_with_cleanup(
-    oskeyring_macos_search, class, attributes, match,
-    return_data, keychain
+    oskeyring_macos_search,
+    class,
+    attributes,
+    match,
+    return_data,
+    keychain
   )
 }
 
@@ -323,8 +329,13 @@ macos_item_search <- function(class = "generic_password", attributes = list(),
 #' @export
 #' @rdname macos_keychain
 
-macos_item_update <- function(class = "generic_password", attributes = list(),
-                              match = list(), update = list(), keychain = NULL) {
+macos_item_update <- function(
+  class = "generic_password",
+  attributes = list(),
+  match = list(),
+  update = list(),
+  keychain = NULL
+) {
   os_check("macOS")
   stopifnot(
     class %in% macos_item_classes(),
@@ -335,7 +346,14 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
   )
 
   invisible(
-    call_with_cleanup(oskeyring_macos_update, class, attributes, match, update, keychain)
+    call_with_cleanup(
+      oskeyring_macos_update,
+      class,
+      attributes,
+      match,
+      update,
+      keychain
+    )
   )
 }
 
@@ -343,8 +361,12 @@ macos_item_update <- function(class = "generic_password", attributes = list(),
 #' @export
 #' @rdname macos_keychain
 
-macos_item_delete <- function(class = "generic_password", attributes = list(),
-                              match = list(), keychain = NULL) {
+macos_item_delete <- function(
+  class = "generic_password",
+  attributes = list(),
+  match = list(),
+  keychain = NULL
+) {
   os_check("macOS")
   stopifnot(
     class %in% macos_item_classes(),
@@ -354,7 +376,13 @@ macos_item_delete <- function(class = "generic_password", attributes = list(),
   )
 
   invisible(
-    call_with_cleanup(oskeyring_macos_delete, class, attributes, match, keychain)
+    call_with_cleanup(
+      oskeyring_macos_delete,
+      class,
+      attributes,
+      match,
+      keychain
+    )
   )
 }
 
@@ -406,10 +434,15 @@ macos_keychain_create <- function(keychain, password = NULL) {
 #' @export
 #' @rdname macos_keychain
 
-macos_keychain_list <- function(domain = c(
-                                  "all", "user", "system",
-                                  "common", "dynamic"
-                                )) {
+macos_keychain_list <- function(
+  domain = c(
+    "all",
+    "user",
+    "system",
+    "common",
+    "dynamic"
+  )
+) {
   os_check("macOS")
   domain <- match.arg(domain)
   ret <- call_with_cleanup(oskeyring_macos_keychain_list, domain)
@@ -636,7 +669,9 @@ is_macos_attributes <- function(attr, class) {
   bad <- setdiff(names(attr), names(good))
   if (length(bad)) {
     stop(
-      "Unknown attributes for `", class, "`:",
+      "Unknown attributes for `",
+      class,
+      "`:",
       paste0("`", bad, "`", collapse = ", ")
     )
   }

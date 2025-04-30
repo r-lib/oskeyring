@@ -1,4 +1,3 @@
-
 utils::globalVariables(c(
   "oskeyring_macos_add",
   "oskeyring_macos_delete",
@@ -32,8 +31,7 @@ is_flag <- function(x) {
 
 is_named_list <- function(x) {
   nms <- names(x)
-  is.list(x) && length(nms) == length(x) && !any(is.na(nms)) &&
-    !any(nms == "")
+  is.list(x) && length(nms) == length(x) && !any(is.na(nms)) && !any(nms == "")
 }
 
 # nocov start
@@ -49,11 +47,13 @@ os_check <- function(which = c("macOS", "Windows", "Linux")) {
   os <- get_os()
   if (os != tolower(which)) {
     err <- structure(
-      list(message = paste0(
-        "Unsupported OS. This function only works on ",
-        which,
-        "."
-      )),
+      list(
+        message = paste0(
+          "Unsupported OS. This function only works on ",
+          which,
+          "."
+        )
+      ),
       class = c("oskeyring_bad_os_error", "error", "condition")
     )
     stop(err)
