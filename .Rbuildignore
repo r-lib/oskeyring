@@ -14,3 +14,5 @@
 ^pkgdown$
 ^codecov\.yml$
 ^LICENSE\.md$
+^[\.]?air\.toml$
+^\.vscode$

@@ -1,4 +1,3 @@
-
 if (packageVersion("testthat") <= "2.5.0") {
   testthat::teardown(test_cleanup_windows())
 } else {
@@ -48,7 +47,6 @@ osk_test_that("windows", "windows_item_write", {
   it2 <- windows_item(NULL, target)
   expect_null(windows_item_write(it2, preserve = TRUE))
   eit2 <- windows_item_read(target)
-
 
   lst <- windows_item_enumerate("oskeyring-test-*")
   tgs <- vapply(lst, "[[", character(1), "target_name")

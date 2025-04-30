@@ -1,4 +1,3 @@
-
 if (packageVersion("testthat") <= "2.5.0") {
   testthat::teardown(test_cleanup_macos())
 } else {
