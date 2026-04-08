@@ -6,3 +6,4 @@
 /src/oskeyring.dll
 /src/*.o
 docs
+/.dev
