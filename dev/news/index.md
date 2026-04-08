@@ -2,6 +2,10 @@
 
 ## oskeyring (development version)
 
+## oskeyring 0.1.7
+
+CRAN release: 2026-04-08
+
 - No user visible changes.
 
 ## oskeyring 0.1.6

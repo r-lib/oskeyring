@@ -15,13 +15,13 @@ Source:
 [`DESCRIPTION`](https://github.com/r-lib/oskeyring/blob/main/DESCRIPTION)
 
 Csárdi G (2026). *oskeyring: Raw System Credential Store Access from R*.
-R package version 0.1.6.9000,
+R package version 0.1.7.9000,
 <https://github.com/r-lib/oskeyring#readme>.
 
     @Manual{,
       title = {oskeyring: Raw System Credential Store Access from R},
       author = {Gábor Csárdi},
       year = {2026},
-      note = {R package version 0.1.6.9000},
+      note = {R package version 0.1.7.9000},
       url = {https://github.com/r-lib/oskeyring#readme},
     }
